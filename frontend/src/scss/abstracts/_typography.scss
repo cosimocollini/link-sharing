@@ -1,0 +1,54 @@
+// @font-face {
+//   font-family: Timeless;
+//   src: url("../fonts/Timeless.eot");
+//   src: url("../fonts/Timeless.eot?#iefix") format("embedded-opentype"),
+//     url("../fonts/Timeless.woff2") format("woff2"),
+//     url("../fonts/Timeless-Normal.woff") format("woff"),
+//     url("../fonts/Timeless-Normal.ttf") format("truetype"),
+//     url("../fonts/Timeless-Normal.svg#svgFontName") format("svg");
+// }
+
+// @font-face {
+//   font-family: Neutra;
+//   src: url("../fonts/Neutra.eot");
+//   src: url("../fonts/Neutra.eot?#iefix") format("embedded-opentype"),
+//     url("../fonts/Neutra.woff2") format("woff2"),
+//     url("../fonts/Neutra.woff") format("woff"),
+//     url("../fonts/Neutra.ttf") format("truetype"),
+//     url("../fonts/Neutra.svg#svgFontName") format("svg");
+// }
+
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400..700&display=swap');
+
+// .instrument-sans  {
+//   font-family: "Instrument Sans", sans-serif;
+//   font-optical-sizing: auto;
+//   font-weight: <weight>;
+//   font-style: normal;
+//   font-variation-settings:
+//     "wdth" 100;
+// }
+
+.heading-s {
+    font-weight: bold;
+    font-size: 1.6rem;
+    line-height: 150%;
+}
+
+.heading-m {
+    font-weight: bold;
+    font-size: 3.2rem;
+    line-height: 150%;
+}
+
+.text-s {
+    font-weight: 400;
+    font-size: 1.2rem;
+    line-height: 150%;
+}
+
+.text-m {
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 150%;
+}

@@ -1,0 +1,14 @@
+@use "../abstracts" as *;
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-family: "Instrument Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings: "wdth" 100;
+    color: $color-grey-dark;
+    background-image: url("");
+}

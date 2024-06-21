@@ -1,0 +1,23 @@
+// colors
+$color-main: #633CFF;
+$color-purple: #BEADFF;
+$color-purple-light: #EFEBFF;
+$color-dark: #333333;
+$color-grey-dark: #737373;
+$color-grey-medium: #D9D9D9;
+$color-grey-light: #FAFAFA;
+$white: #FFF;
+$black: #000;
+$red: #FF3939;
+
+$breakpoints: (
+  "md": (
+    min-width: 800px,
+  ),
+  "lg": (
+    min-width: 1023px,
+  ),
+  "xl": (
+    min-width: 1200px,
+  ),
+);
