@@ -2,6 +2,7 @@
 
 .field {
     display: inline-block;
+    margin-bottom: 24px;
 
     &--full-width {
         display: block;
@@ -26,14 +27,14 @@
         @extend .text-s;
         display: block;
         margin-bottom: 4px;
+        color: $color-dark;
     }
 
     &__input-wrapper {
         border: 1px solid $color-grey-medium;
         display: flex;
         align-items: center;
-        justify-content: center;
-        // height: 48px;
+        justify-content: start;
         padding: 1.2rem 1.6rem;
         border-radius: 8px;
 

@@ -5,10 +5,26 @@ html {
 }
 
 body {
+    @extend .text-m;
     font-family: "Instrument Sans", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
     font-variation-settings: "wdth" 100;
+    background-color: $color-grey-light;
     color: $color-grey-dark;
-    background-image: url("");
+}
+
+.blank-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+}
+
+.box {
+    background-color: $white;
+    border-radius: 8px;
+    padding: 4rem;
 }

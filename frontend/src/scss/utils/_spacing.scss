@@ -1,0 +1,23 @@
+@use "../abstracts/variables" as *;
+
+@function margin($value) {
+  @return $value * $base-spacing;
+}
+
+@each $key, $value in $margins {
+  .m-#{$key} {
+    margin: margin($value);
+  }
+  .mt-#{$key} {
+    margin-top: margin($value);
+  }
+  .mb-#{$key} {
+    margin-bottom: margin($value);
+  }
+  .ml-#{$key} {
+    margin-left: margin($value);
+  }
+  .mr-#{$key} {
+    margin-right: margin($value);
+  }
+}
