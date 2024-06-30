@@ -23,14 +23,6 @@ type User struct {
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 }
 
-//	func databaseUserToUser(user database.User) User {
-//		return User{
-//			ID:        user.ID,
-//			FirstName: nullStringToString(user.FirstName),
-//			LastName:  nullStringToString(user.LastName),
-//			Email:     user.Email,
-//		}
-//	}
 func databaseUserToUser(success bool, status int, user database.User) APIResponse[User] {
 	return APIResponse[User]{
 		Success: success,
