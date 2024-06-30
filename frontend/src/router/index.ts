@@ -3,35 +3,35 @@ import HomeView from '../views/HomeView.vue'
 import BlankView from '@/views/BlankView.vue'
 import Login from '@/components/forms/Login.vue'
 import Register from '@/components/forms/Register.vue'
+import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView
+      name: 'dashboard',
+      component: HomeView,
+      meta: { requiresAuth: true },
     },
     {
       path: '/login',
-      name: 'login',
       component: BlankView,
       children: [
         {
           path: '',
-          name: 'loginForm',
+          name: 'login',
           component: Login
         }
       ]
     },
     {
       path: '/register',
-      name: 'register',
       component: BlankView,
       children: [
         {
           path: '',
-          name: 'registerForm',
+          name: 'register',
           component: Register
         }
       ]
@@ -39,11 +39,9 @@ const router = createRouter({
   ]
 })
 
-// router.beforeEach(async (to, from) => {
-//   // canUserAccess() returns `true` or `false`
-//   // const canAccess = await canUserAccess(to)
-//   const canAccess = false
-//   if (!canAccess) return { name: 'login' }
-// })
+router.beforeEach(async (to, from) => {
+  const userStore = useUserStore();
+  if (to.meta.requiresAuth && !userStore.isAuthenticated) return { name: 'login' }
+})
 
 export default router
