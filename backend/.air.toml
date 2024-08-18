@@ -1,0 +1,17 @@
+# Config file for Air
+[build]
+    # Command to build the app
+    cmd = "go build -o out ."
+    # Binary to watch
+    bin = "out"
+    # Working directory
+    dir = "."
+    # Patterns to wathc
+    include_ext = ["go"]
+    # Exclude files
+    exclude_dir = ["vendor"]
+    # Command to run afrer build
+    run_after_build = "chmod +x out"
+
+[log]
+    level = "debug"
