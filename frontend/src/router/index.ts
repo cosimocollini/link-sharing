@@ -1,9 +1,9 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import BlankView from '@/views/BlankView.vue'
-import Login from '@/components/forms/Login.vue'
-import Register from '@/components/forms/Register.vue'
-import { useUserStore } from '@/stores/user'
+import { createRouter, createWebHistory } from 'vue-router';
+import Dashboard from '@/views/Dashboard.vue';
+import BlankView from '@/views/BlankView.vue';
+import Login from '@/components/forms/Login.vue';
+import Register from '@/components/forms/Register.vue';
+import { useUserStore } from '@/stores/user';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,8 +11,8 @@ const router = createRouter({
     {
       path: '/',
       name: 'dashboard',
-      component: HomeView,
-      meta: { requiresAuth: true },
+      component: Dashboard,
+      meta: { requiresAuth: true }
     },
     {
       path: '/login',
@@ -35,13 +35,13 @@ const router = createRouter({
           component: Register
         }
       ]
-    },
+    }
   ]
-})
+});
 
-router.beforeEach(async (to, from) => {
-  const userStore = useUserStore();
-  if (to.meta.requiresAuth && !userStore.isAuthenticated) return { name: 'login' }
-})
+// router.beforeEach(async (to, from) => {
+//   const userStore = useUserStore();
+//   if (to.meta.requiresAuth && !userStore.isAuthenticated) return { name: 'login' }
+// })
 
-export default router
+export default router;

@@ -1,4 +1,4 @@
-@use "../abstracts/variables" as *;
+@use '../abstracts/variables' as *;
 
 @function margin($value) {
   @return $value * $base-spacing;
@@ -19,5 +19,36 @@
   }
   .mr-#{$key} {
     margin-right: margin($value);
+  }
+  .my-#{$key} {
+    margin-top: margin($value);
+    margin-bottom: margin($value);
+  }
+  .mx-#{$key} {
+    margin-right: margin($value);
+    margin-left: margin($value);
+  }
+  .p-#{$key} {
+    padding: margin($value);
+  }
+  .pt-#{$key} {
+    padding-top: margin($value);
+  }
+  .pb-#{$key} {
+    padding-bottom: margin($value);
+  }
+  .pl-#{$key} {
+    padding-left: margin($value);
+  }
+  .pr-#{$key} {
+    padding-right: margin($value);
+  }
+  .py-#{$key} {
+    padding-top: margin($value);
+    padding-bottom: margin($value);
+  }
+  .px-#{$key} {
+    padding-right: margin($value);
+    padding-left: margin($value);
   }
 }

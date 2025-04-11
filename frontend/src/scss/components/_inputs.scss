@@ -1,149 +1,148 @@
-@use "../abstracts" as *;
+@use '../abstracts' as *;
 
 .field {
-    display: inline-block;
-    margin-bottom: 24px;
+  display: inline-block;
+  margin-bottom: 24px;
 
-    &--full-width {
-        display: block;
-        width: 100%;
-    }
+  &--full-width {
+    display: block;
+    width: 100%;
+  }
 
-    &.has-error {
-        label {
-            color: $red;
-        }
-
-        .field__input-wrapper {
-            border: 1px solid $red;
-
-            .message {
-                color: $red;
-            }
-        }
-    }
-
+  &.has-error {
     label {
-        @extend .text-s;
-        display: block;
-        margin-bottom: 4px;
-        color: $color-dark;
+      color: $red;
     }
 
-    &__input-wrapper {
-        border: 1px solid $color-grey-medium;
-        display: flex;
-        align-items: center;
-        justify-content: start;
-        padding: 1.2rem 1.6rem;
-        border-radius: 8px;
+    .field__input-wrapper {
+      border: 1px solid $red;
 
-        &:focus-within {
-            border: 1px solid $color-main;
-            box-shadow: 0px 0px 32px rgba(99, 60, 255, 0.25);
-        }
-
-        input {
-            @extend .text-m;
-            display: block;
-            border: none;
-
-            &:focus {
-                outline: none;
-            }
-        }
-
-        svg {
-            margin-right: 12px;
-        }
-
-        .message {
-            @extend .text-s;
-            margin: 0;
-        }
+      .message {
+        color: $red;
+      }
     }
+  }
+
+  label {
+    @extend .body-s;
+    display: block;
+    margin-bottom: 4px;
+    color: $color-dark;
+  }
+
+  &__input-wrapper {
+    border: 1px solid $color-grey-medium;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding: 1.2rem 1.6rem;
+    border-radius: 8px;
+
+    &:focus-within {
+      border: 1px solid $color-main;
+      box-shadow: 0px 0px 32px rgba(99, 60, 255, 0.25);
+    }
+
+    input {
+      @extend .body-m;
+      display: block;
+      border: none;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    svg {
+      margin-right: 12px;
+    }
+
+    .message {
+      @extend .body-s;
+      margin: 0;
+    }
+  }
 }
 
 // INPUT FILE
 .file-upload-wrapper {
-    .field {
-        display: flex;
-        align-items: center;
-        gap: 2.4rem;
+  .field {
+    display: flex;
+    align-items: center;
+    gap: 2.4rem;
 
-        .file-description {
-            @extend .text-s;
-        }
-
-        label {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 193px;
-            height: 193px;
-            border-radius: 8px;
-            background-color: $color-purple-light;
-            cursor: pointer;
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center center;
-            position: relative;
-            overflow: hidden;
-
-            &.full {
-                &::after {
-                    content: "";
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-color: $black;
-                    opacity: 0.5;
-                }
-
-                .text-wrapper {
-                    color: $white;
-
-                    svg {
-                        path {
-                            fill: $white;
-                        }
-                    }
-
-                    .full-label {
-                        display: block;
-                    }
-                    .empty-label {
-                        display: none;
-                    }
-                }
-            }
-
-
-            .text-wrapper {
-                @extend .heading-s;
-                color: $color-main;
-                text-align: center;
-                z-index: 1;
-
-                svg {
-                    display: block;
-                    margin: 0 auto;
-                    margin-bottom: 8px;
-                }
-
-                .full-label {
-                    display: none;
-                }
-            }
-
-            input[type="file"] {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 0;
-            }
-        }
+    .file-description {
+      @extend .body-s;
     }
+
+    label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 193px;
+      height: 193px;
+      border-radius: 8px;
+      background-color: $color-purple-light;
+      cursor: pointer;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center center;
+      position: relative;
+      overflow: hidden;
+
+      &.full {
+        &::after {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background-color: $black;
+          opacity: 0.5;
+        }
+
+        .text-wrapper {
+          color: $white;
+
+          svg {
+            path {
+              fill: $white;
+            }
+          }
+
+          .full-label {
+            display: block;
+          }
+          .empty-label {
+            display: none;
+          }
+        }
+      }
+
+      .text-wrapper {
+        @extend .heading-s;
+        color: $color-main;
+        text-align: center;
+        z-index: 1;
+
+        svg {
+          display: block;
+          margin: 0 auto;
+          margin-bottom: 8px;
+        }
+
+        .full-label {
+          display: none;
+        }
+      }
+
+      input[type='file'] {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+      }
+    }
+  }
 }

@@ -1,17 +1,24 @@
 <template>
-    <component :is="iconComponent" v-bind="$attrs" />
+  <svg class="icon" :class="customClass">
+    <use :xlink:href="spritePath"></use>
+  </svg>
 </template>
 
-<script lang="ts" setup>
-import { computed, defineAsyncComponent } from 'vue';
+<script setup lang="ts">
+import { computed } from 'vue';
 
-const props = defineProps<{
-    name: string;
-}>();
-
-const iconComponent = computed(() => {
-    return defineAsyncComponent(() =>
-        import(`../assets/icons/${props.name}.svg`)
-    );
+const props = defineProps({
+  name: { String, required: true },
+  customClass: { String, default: '' }
 });
+
+const spritePath = computed(() => `/src/assets/stack/svg/sprite.css.svg#${props.name}`);
 </script>
+
+<style scoped>
+.icon {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+</style>

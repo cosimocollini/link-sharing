@@ -1,0 +1,22 @@
+@use '../abstracts' as *;
+
+nav {
+  display: block;
+  height: $navigation-height;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+
+  > div {
+    width: 100%;
+    background-color: $white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+  }
+
+  @include respond-to('md') {
+    height: $navigation-height-desktop;
+  }
+}

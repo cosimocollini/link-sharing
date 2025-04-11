@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/vue3';
-import SvgIcon from '../components/SvgIcon.vue';
+import SvgIcon from '@/components/SvgIcon.vue';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta = {
@@ -7,11 +7,11 @@ const meta = {
   component: SvgIcon,
   // This component will have an automatically generated docsPage entry: https://storybook.js.org/docs/writing-docs/autodocs
   tags: ['autodocs'],
-  argTypes: {
-  },
+  argTypes: {},
   args: {
-    name: "logo",
-  },
+    name: 'logo',
+    class: 'icon'
+  }
 } satisfies Meta<typeof SvgIcon>;
 
 export default meta;
@@ -23,15 +23,16 @@ type Story = StoryObj<typeof meta>;
  */
 export const IconLogo: Story = {
   args: {
-  },
+    name: 'logo'
+  }
 };
 export const IconGithub: Story = {
   args: {
     name: 'github'
-  },
+  }
 };
 export const IconYoutube: Story = {
   args: {
     name: 'youtube'
-  },
+  }
 };
