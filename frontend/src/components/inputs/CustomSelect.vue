@@ -100,8 +100,8 @@ const fruit = ref();
   border-radius: 8px;
   border: 1px solid $color-grey-medium;
   width: var(--radix-select-trigger-width);
-  // max-height: var(--radix-select-content-available-height);
-  max-height: 176px;
+  max-height: var(--radix-select-content-available-height);
+  // max-height: 176px;
 }
 
 .SelectViewport {

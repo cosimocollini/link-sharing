@@ -3,17 +3,25 @@ import { toRef } from 'vue';
 import { useField } from 'vee-validate';
 import SvgIcon from '@/components/SvgIcon.vue';
 
-const props = defineProps<{
-  //modelValue: string;
-  label?: string;
-  type: string;
-  inputId: string;
-  name: string;
-  placeholder?: string;
-  icon?: string;
-  rules?: any;
-  value?: string;
+const emit = defineEmits<{
+  (e: 'click', id: number): void;
 }>();
+
+const props = withDefaults(
+  defineProps<{
+    //modelValue: string;
+    label?: string;
+    type: string;
+    inputId: string;
+    name: string;
+    placeholder?: string;
+    icon?: string;
+    rules?: any;
+    value?: string;
+    class?: string;
+  }>(),
+  { type: 'text', rules: [], class: '' }
+);
 
 const name = toRef(props, 'name');
 
@@ -29,7 +37,7 @@ const {
 </script>
 
 <template>
-  <div class="field" :class="{ 'has-error': !!errorMessage, success: meta.valid }">
+  <div class="field" :class="[{ 'has-error': !!errorMessage, success: meta.valid }, props.class]">
     <label :for="name">{{ label }}</label>
     <div class="field__input-wrapper">
       <SvgIcon v-if="props.icon" :name="props.icon" />

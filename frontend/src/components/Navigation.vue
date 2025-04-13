@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import SvgIcon from './SvgIcon.vue';
 import NavigationTabs from '@/components/NavigationTabs.vue';
-import Button from '@/components/Button.vue';
+import Button from '@/components/CustomButton.vue';
 </script>
 
 <template>

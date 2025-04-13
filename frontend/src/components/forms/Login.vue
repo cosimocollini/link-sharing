@@ -30,7 +30,7 @@
 <script lang="ts" setup>
 import { useForm } from 'vee-validate';
 import Input from '../inputs/Input.vue';
-import Button from '../Button.vue';
+import Button from '../CustomButton.vue';
 
 interface LoginForm {
   email: string;

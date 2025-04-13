@@ -6,7 +6,7 @@ const props = withDefaults(
   defineProps<{
     label: string;
     type?: 'button' | 'submit' | 'reset';
-    level?: 'primary' | 'secondary' | 'tertiary';
+    level?: 'primary' | 'secondary' | 'tertiary' | 'blank';
     disable?: boolean;
     fullWidth?: boolean;
     iconLeft?: string;
@@ -24,6 +24,7 @@ const classes = computed(() => ({
   'button--primary': props.level === 'primary',
   'button--tertiary': props.level === 'tertiary',
   'button--secondary': props.level === 'secondary',
+  'button--blank': props.level === 'blank',
   'button--full-width': props.fullWidth,
   'button--disabled': props.disable === true
 }));

@@ -35,7 +35,7 @@
     display: flex;
     align-items: center;
     justify-content: start;
-    padding: 1.2rem 1.6rem;
+    padding: rem(12) rem(16);
     border-radius: 8px;
 
     &:focus-within {

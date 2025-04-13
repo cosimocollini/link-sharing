@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Button from '@/components/Button.vue';
-import Select from './inputs/CustomSelect.vue';
+import Button from '@/components/CustomButton.vue';
+import LinkConstructor from '@/components/forms/LinkConstructor.vue';
 </script>
 
 <template>
@@ -98,7 +98,7 @@ import Select from './inputs/CustomSelect.vue';
     </div>
 
     <div class="links-list px-5 mb-5">
-      <Select></Select>
+      <LinkConstructor />
     </div>
 
     <div class="footer py-4 px-3">

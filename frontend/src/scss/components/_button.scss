@@ -41,6 +41,18 @@
     }
   }
 
+  &--blank {
+    @extend .body-m;
+    border: none;
+    background-color: transparent;
+    padding: 0;
+
+    &:hover {
+      box-shadow: unset;
+      color: $color-main;
+    }
+  }
+
   &--full-width {
     width: 100%;
   }

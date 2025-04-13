@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useForm } from 'vee-validate';
 import Input from '../inputs/Input.vue';
-import Button from '../Button.vue';
+import Button from '../CustomButton.vue';
 import * as yup from 'yup';
 import { useUserStore } from '@/stores/user';
 import type { InputCreateUser } from '@/services/users/types';
