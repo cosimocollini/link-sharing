@@ -17,8 +17,8 @@ const spritePath = computed(() => `/src/assets/stack/svg/sprite.css.svg#${props.
 
 <style scoped>
 .icon {
-  width: 24px;
-  height: 24px;
+  width: 16px;
+  height: 16px;
   fill: currentColor;
 }
 </style>

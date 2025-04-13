@@ -7,7 +7,7 @@ const props = withDefaults(
     label: string;
     type?: 'button' | 'submit' | 'reset';
     level?: 'primary' | 'secondary' | 'tertiary';
-    disabled?: boolean;
+    disable?: boolean;
     fullWidth?: boolean;
     iconLeft?: string;
     iconRight?: string;
@@ -24,7 +24,8 @@ const classes = computed(() => ({
   'button--primary': props.level === 'primary',
   'button--tertiary': props.level === 'tertiary',
   'button--secondary': props.level === 'secondary',
-  'button--full-width': props.fullWidth
+  'button--full-width': props.fullWidth,
+  'button--disabled': props.disable === true
 }));
 
 const onClick = () => {
@@ -33,7 +34,13 @@ const onClick = () => {
 </script>
 
 <template>
-  <button :type="props.type" :class="classes" :disabled="props.disabled" @click="onClick">
+  <button
+    :type="props.type"
+    :class="classes"
+    :disabled="props.disable"
+    @click="onClick"
+    :aria-disabled="props.disable"
+  >
     <SvgIcon v-if="props.iconLeft" :name="props.iconLeft" class="mr-2" />
     {{ label }}
     <SvgIcon v-if="props.iconRight" :name="props.iconRight" class="ml-2" />

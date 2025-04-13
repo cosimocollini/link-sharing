@@ -2,6 +2,7 @@
 
 .button {
   @extend .heading-s;
+  margin-bottom: 0;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -42,5 +43,10 @@
 
   &--full-width {
     width: 100%;
+  }
+
+  &--disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
   }
 }
