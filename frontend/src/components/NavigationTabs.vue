@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TabsContent, TabsIndicator, TabsList, TabsRoot, TabsTrigger } from 'radix-vue';
+import { TabsContent, TabsIndicator, TabsList, TabsRoot, TabsTrigger } from 'reka-ui';
 import TabContentDetails from './TabContentDetails.vue';
 import TabContentLinks from './TabContentLinks.vue';
 </script>
@@ -42,27 +42,29 @@ input {
 .TabsList {
   flex-shrink: 0;
   display: flex;
-  // position: relative;
+  position: relative;
+  gap: 16px;
 }
 
 .TagsIndicator {
   position: absolute;
   padding-left: 2rem;
   left: 0;
-  height: 2px;
+  height: 100%;
   bottom: 0;
-  width: var(--radix-tabs-indicator-size);
-  transform: translateX(var(--radix-tabs-indicator-position));
-  border-radius: 9999px; /* rounded-full equivalent */
+  width: var(--reka-tabs-indicator-size);
+  transform: translateX(var(--reka-tabs-indicator-position));
+  border-radius: 8px;
   transition-property: width, transform;
   transition-duration: 300ms;
-  border: 1px solid red;
+  background-color: $color-purple-light;
 }
 
 .TabsTrigger {
   position: relative;
   font-family: inherit;
-  background-color: white;
+  background-color: none;
+  // background-color: white;
   padding: 11px 27px;
   display: flex;
   align-items: center;
@@ -74,18 +76,13 @@ input {
   border-radius: 8px;
   cursor: pointer;
 }
-// .TabsTrigger:first-child {
-//   border-top-left-radius: 6px;
-// }
-// .TabsTrigger:last-child {
-//   border-top-right-radius: 6px;
-// }
+
 .TabsTrigger:hover {
   color: $color-main;
 }
 .TabsTrigger[data-state='active'] {
   color: $color-main;
-  background-color: $color-purple-light;
+  // background-color: $color-purple-light;
 }
 .TabsTrigger:focus {
   position: relative;
