@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
   SelectViewport
-} from 'radix-vue';
+} from 'reka-ui';
 
 import { LINKS } from '@/constants';
 
@@ -99,8 +99,8 @@ const fruit = ref();
   background-color: $white;
   border-radius: 8px;
   border: 1px solid $color-grey-medium;
-  width: var(--radix-select-trigger-width);
-  max-height: var(--radix-select-content-available-height);
+  width: var(--reka-select-trigger-width);
+  max-height: var(--reka-select-content-available-height);
   // max-height: 176px;
 }
 
