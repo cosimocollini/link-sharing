@@ -84,7 +84,7 @@ input {
   color: $color-main;
   // background-color: $color-purple-light;
 }
-.TabsTrigger:focus {
+.TabsTrigger:focus-visible {
   position: relative;
   box-shadow: 0 0 0 2px $color-purple;
 }

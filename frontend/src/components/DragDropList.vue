@@ -14,7 +14,8 @@
           'draggable-item': true,
           'is-dragging': isDragging && dragItemId === item.id,
           'is-preview': isDragging && dragOverIndex === index && dragItemId !== item.id,
-          'drag-placeholder': isDragging && originalIndex === index && dragItemId === item.id
+          'drag-placeholder': isDragging && originalIndex === index && dragItemId === item.id,
+          'preview-keyboard': dragOverIndex === index && isKeyboardDragging
         }"
         :aria-grabbed="isDragging && dragIndex === index ? 'true' : 'false'"
         :aria-dropeffect="dragOverIndex === index ? 'move' : 'none'"
@@ -170,16 +171,16 @@ const handleKeyDown = (event: KeyboardEvent, index: number) => {
   if (isKeyboardDragging.value) {
     switch (key) {
       case 'ArrowUp':
-        if (index > 0) {
+        if (index >= 0) {
           event.preventDefault();
-          dragOverIndex.value = index - 1;
+          dragOverIndex.value !== null ? dragOverIndex.value-- : (dragOverIndex.value = index - 1);
           announceToScreenReader(`Anteprima sopra l'elemento ${index}`);
         }
         break;
       case 'ArrowDown':
         if (index < items.value.length - 1) {
           event.preventDefault();
-          dragOverIndex.value = index + 1;
+          dragOverIndex.value !== null ? dragOverIndex.value++ : (dragOverIndex.value = index + 1);
           announceToScreenReader(`Anteprima sotto l'elemento ${index + 2}`);
         }
         break;
@@ -274,7 +275,7 @@ const announceToScreenReader = (message: string) => {
   background-color: #f0f0f0;
 }
 
-.draggable-item:focus {
+.draggable-item:focus-visible {
   outline: 2px solid #3498db;
   box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
 }
@@ -288,6 +289,11 @@ const announceToScreenReader = (message: string) => {
 }
 
 .draggable-item.drop-preview {
+  border: 2px dashed #3498db;
+  background-color: rgba(52, 152, 219, 0.1);
+}
+
+.preview-keyboard {
   border: 2px dashed #3498db;
   background-color: rgba(52, 152, 219, 0.1);
 }
