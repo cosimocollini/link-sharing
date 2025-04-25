@@ -7,7 +7,12 @@ import Button from '@/components/CustomButton.vue';
 <template>
   <div class="link-constructor box">
     <div class="link-constructor__header">
-      <p class="grab">Link #</p>
+      <p class="grab">
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="6" fill="none">
+          <path fill="#737373" d="M0 0h12v1H0zM0 5h12v1H0z" />
+        </svg>
+        Link #
+      </p>
       <Button label="Remove" level="blank"></Button>
     </div>
     <Select />
@@ -37,6 +42,9 @@ import Button from '@/components/CustomButton.vue';
     margin-bottom: rem(12);
 
     .grab {
+      display: flex;
+      align-items: center;
+      gap: rem(8);
       font-weight: bold;
       cursor: grab;
     }

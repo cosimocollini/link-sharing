@@ -1,6 +1,26 @@
 <script setup lang="ts">
 import Button from '@/components/CustomButton.vue';
 import LinkConstructor from '@/components/forms/LinkConstructor.vue';
+import DragDropList from '@/components/DragDropList.vue';
+import { ref } from 'vue';
+
+interface ListItem {
+  id: number | string;
+  content: string;
+}
+
+const items = ref<ListItem[]>([
+  { id: 1, content: 'Completare il report' },
+  { id: 2, content: 'Inviare email al team' },
+  { id: 3, content: 'Preparare la presentazione' },
+  { id: 4, content: 'Partecipare alla riunione' },
+  { id: 5, content: 'Aggiornare la documentazione' }
+]);
+
+const updateItems = (newItems: ListItem[]) => {
+  items.value = newItems;
+  console.log('Lista aggiornata:', newItems);
+};
 </script>
 
 <template>
@@ -99,6 +119,7 @@ import LinkConstructor from '@/components/forms/LinkConstructor.vue';
 
     <div class="links-list px-5 mb-5">
       <LinkConstructor />
+      <DragDropList :initialItems="items" @update:items="updateItems" />
     </div>
 
     <div class="footer py-4 px-3">
