@@ -31,8 +31,8 @@
         @drop.prevent="handleDrop($event, index)"
         @keydown="handleKeyDown($event, index)"
       >
-        <div class="item-content">
-          {{ item.content }}
+        <div v-if="$slots.item" class="item-content">
+          <slot name="item" v-bind="item"></slot>
         </div>
       </li>
     </TransitionGroup>
@@ -243,7 +243,9 @@ const announceToScreenReader = (message: string) => {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@use '@/scss/abstracts' as *;
+
 .draggable-container {
   width: 100%;
   margin: 0 auto;
@@ -261,8 +263,7 @@ const announceToScreenReader = (message: string) => {
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  background-color: #f9f9f9;
-  border: 1px solid #e0e0e0;
+  background-color: $color-grey-light;
   border-radius: 4px;
   margin-bottom: 8px;
   cursor: grab;

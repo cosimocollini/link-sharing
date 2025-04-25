@@ -117,9 +117,12 @@ const updateItems = (newItems: ListItem[]) => {
       </p>
     </div>
 
-    <div class="links-list px-5 mb-5">
-      <LinkConstructor />
-      <DragDropList :initialItems="items" @update:items="updateItems" />
+    <div class="links-list px-5">
+      <DragDropList :initialItems="items" @update:items="updateItems">
+        <template #item="{ id }">
+          <LinkConstructor />
+        </template>
+      </DragDropList>
     </div>
 
     <div class="footer py-4 px-3">
@@ -175,6 +178,7 @@ const updateItems = (newItems: ListItem[]) => {
     display: block;
     width: 100%;
     flex: 1 1 auto;
+    overflow-y: auto;
   }
 }
 </style>
