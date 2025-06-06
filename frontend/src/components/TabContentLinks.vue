@@ -131,7 +131,7 @@ const updateItems = (newItems: ListItem[]) => {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @use '@/scss/abstracts' as *;
 
 .tab-content {

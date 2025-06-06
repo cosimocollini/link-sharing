@@ -2,7 +2,7 @@
 
 .field {
   display: inline-block;
-  margin-bottom: 24px;
+  margin-bottom: rem(12);
 
   &--full-width {
     display: block;
