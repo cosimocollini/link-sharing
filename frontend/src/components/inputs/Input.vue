@@ -19,8 +19,9 @@ const props = withDefaults(
     rules?: any;
     value?: string;
     class?: string;
+    required?: boolean;
   }>(),
-  { type: 'text', rules: [], class: '' }
+  { type: 'text', rules: [], class: '', required: false }
 );
 
 const name = toRef(props, 'name');
@@ -38,7 +39,7 @@ const {
 
 <template>
   <div class="field" :class="[{ 'has-error': !!errorMessage, success: meta.valid }, props.class]">
-    <label :for="name">{{ label }}</label>
+    <label :for="name">{{ label }}{{ required && '*' }}</label>
     <div class="field__input-wrapper">
       <SvgIcon v-if="props.icon" :name="props.icon" />
       <input
@@ -47,6 +48,7 @@ const {
         :type="type"
         :value="inputValue"
         :placeholder="placeholder"
+        :required="required"
         @input="handleChange"
         @blur="handleBlur"
       />
