@@ -39,7 +39,7 @@ const {
 
 <template>
   <div class="field" :class="[{ 'has-error': !!errorMessage, success: meta.valid }, props.class]">
-    <label :for="name">{{ label }}{{ required && '*' }}</label>
+    <label :for="name">{{ label }}{{ required ? '*' : '' }}</label>
     <div class="field__input-wrapper">
       <SvgIcon v-if="props.icon" :name="props.icon" />
       <input

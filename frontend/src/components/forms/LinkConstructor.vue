@@ -52,6 +52,7 @@ import Button from '@/components/CustomButton.vue';
 
   .field {
     margin-bottom: 0;
+    width: 100%;
   }
 }
 </style>
