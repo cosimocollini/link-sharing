@@ -119,8 +119,8 @@ const updateItems = (newItems: ListItem[]) => {
 
     <div class="links-list px-5">
       <DragDropList :initialItems="items" @update:items="updateItems">
-        <template #item="{ id }">
-          <LinkConstructor />
+        <template #item="{ item, index}">
+          <LinkConstructor :data="item" :index="index" />
         </template>
       </DragDropList>
     </div>

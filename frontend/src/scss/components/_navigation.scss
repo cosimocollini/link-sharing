@@ -18,5 +18,11 @@ nav {
 
   @include respond-to('md') {
     height: $navigation-height-desktop;
+
+    .logo-desktop {
+      display: block;
+      width: rem(140) !important;
+      height: rem(32) !important;
+    }
   }
 }

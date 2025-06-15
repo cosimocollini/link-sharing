@@ -8,13 +8,28 @@ interface Link {
 }
 
 export const useFormStore = defineStore('form', () => {
-  const links = ref<Link[]>([]);
+  const links = ref<Link[]>([
+    { id: crypto.randomUUID(), name: 'github', url: 'https://example.com' }
+  ]);
 
-  // const doubleCount = computed(() => count.value * 2);
+  const addLink = (name: string, url: string) => {
+    const newLink: Link = {
+      id: crypto.randomUUID(),
+      name,
+      url
+    };
+    links.value.push(newLink);
+  };
+  const removeLink = (id: string) => {
+    links.value = links.value.filter((link) => link.id !== id);
+  };
+  const updateLink = (id: string, name: string, url: string) => {
+    const link = links.value.find((link) => link.id === id);
+    if (link) {
+      link.name = name;
+      link.url = url;
+    }
+  };
 
-  // function increment() {
-  //   count.value++;
-  // }
-
-  return { links };
+  return { links, addLink, removeLink, updateLink };
 });
