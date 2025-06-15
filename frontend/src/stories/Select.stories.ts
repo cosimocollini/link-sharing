@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
-import { fn } from '@storybook/test';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
+import { fn } from 'storybook/test';
 import SelectInput from '../components/inputs/CustomSelect.vue';
 import * as yup from 'yup';
 

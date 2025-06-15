@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/vue3';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import InputFile from '../components/inputs/InputFile.vue';
 //import * as yup from 'yup';
 
