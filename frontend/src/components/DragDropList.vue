@@ -1,49 +1,3 @@
-// DraggableList.vue
-<template>
-  <div class="draggable-container">
-    <TransitionGroup
-      tag="ul"
-      name="list"
-      class="draggable-list"
-      aria-describedby="dragInstructions"
-    >
-      <li
-        v-for="(item, index) in displayItems"
-        :key="item.id"
-        :class="{
-          'draggable-item': true,
-          'is-dragging': isDragging && dragItemId === item.id,
-          'is-preview': isDragging && dragOverIndex === index && dragItemId !== item.id,
-          'drag-placeholder': isDragging && originalIndex === index && dragItemId === item.id,
-          'preview-keyboard': dragOverIndex === index && isKeyboardDragging
-        }"
-        :aria-grabbed="isDragging && dragIndex === index ? 'true' : 'false'"
-        :aria-dropeffect="dragOverIndex === index ? 'move' : 'none'"
-        :data-index="index"
-        :id="`item-${item.id}`"
-        tabindex="0"
-        draggable="true"
-        @dragstart="handleDragStart($event, index, item.id)"
-        @dragend="handleDragEnd"
-        @dragover.prevent="handleDragOver($event, index)"
-        @dragenter.prevent="handleDragEnter($event, index)"
-        @dragleave="handleDragLeave($event, index)"
-        @drop.prevent="handleDrop($event, index)"
-        @keydown="handleKeyDown($event, index)"
-      >
-        <div v-if="$slots.item" class="item-content">
-          <slot name="item" v-bind="item"></slot>
-        </div>
-      </li>
-    </TransitionGroup>
-    <div id="dragInstructions" class="screen-reader-only">
-      Per riordinare gli elementi, usa i tasti freccia su e giù per selezionare un elemento, poi
-      premi Spazio per selezionarlo, usa nuovamente le frecce per spostarlo e premi Spazio per
-      confermare la nuova posizione.
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
@@ -243,6 +197,50 @@ const announceToScreenReader = (message: string) => {
 };
 </script>
 
+<template>
+  <div class="draggable-container">
+    <TransitionGroup
+      tag="ul"
+      name="list"
+      class="draggable-list"
+      aria-describedby="dragInstructions"
+    >
+      <li
+        v-for="(item, index) in displayItems"
+        :key="item.id"
+        :class="{
+          'draggable-item': true,
+          'is-dragging': isDragging && dragItemId === item.id,
+          'is-preview': isDragging && dragOverIndex === index && dragItemId !== item.id,
+          'drag-placeholder': isDragging && originalIndex === index && dragItemId === item.id,
+          'preview-keyboard': dragOverIndex === index && isKeyboardDragging
+        }"
+        :aria-grabbed="isDragging && dragIndex === index ? 'true' : 'false'"
+        :aria-dropeffect="dragOverIndex === index ? 'move' : 'none'"
+        :data-index="index"
+        :id="`item-${item.id}`"
+        tabindex="0"
+        draggable="true"
+        @dragstart="handleDragStart($event, index, item.id)"
+        @dragend="handleDragEnd"
+        @dragover.prevent="handleDragOver($event, index)"
+        @dragenter.prevent="handleDragEnter($event, index)"
+        @dragleave="handleDragLeave($event, index)"
+        @drop.prevent="handleDrop($event, index)"
+        @keydown="handleKeyDown($event, index)"
+      >
+        <div v-if="$slots.item" class="item-content">
+          <slot name="item" v-bind="{ item, index }"></slot>
+        </div>
+      </li>
+    </TransitionGroup>
+    <div id="dragInstructions" class="screen-reader-only">
+      To reorder items, use the up and down arrow keys to select an item, then press Space to select
+      it, use the arrows again to move it, and press Space to confirm the new position.
+    </div>
+  </div>
+</template>
+
 <style scoped lang="scss">
 @use '@/scss/abstracts' as *;
 
@@ -262,9 +260,7 @@ const announceToScreenReader = (message: string) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 16px;
-  background-color: $color-grey-light;
-  border-radius: 4px;
+  border-radius: 12px;
   margin-bottom: 8px;
   cursor: grab;
   position: relative;
@@ -272,34 +268,31 @@ const announceToScreenReader = (message: string) => {
   touch-action: none;
 }
 
-.draggable-item:hover {
-  background-color: #f0f0f0;
-}
-
 .draggable-item:focus-visible {
-  outline: 2px solid #3498db;
+  outline: 2px solid $color-main;
   box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.3);
 }
 
 .draggable-item.is-dragging {
   opacity: 0.4;
-  border: 2px dashed #3498db;
+  border: 2px dashed $color-main;
 }
+
 .draggable-item.list-move {
   pointer-events: none;
 }
 
 .draggable-item.drop-preview {
-  border: 2px dashed #3498db;
+  border: 2px dashed $color-main;
   background-color: rgba(52, 152, 219, 0.1);
 }
 
 .preview-keyboard {
-  border: 2px dashed #3498db;
+  border: 2px dashed $color-main;
   background-color: rgba(52, 152, 219, 0.1);
 }
 
-/* Stile per il segnaposto nella posizione originale */
+/* Original Style */
 /* .draggable-item.drag-placeholder {
   opacity: 0.2;
   background-color: #e0e0e0;
@@ -308,7 +301,7 @@ const announceToScreenReader = (message: string) => {
 } */
 
 .draggable-item.is-preview {
-  border: 2px dashed #3498db;
+  border: 2px dashed $color-main;
   background-color: rgba(52, 152, 219, 0.1);
 }
 
