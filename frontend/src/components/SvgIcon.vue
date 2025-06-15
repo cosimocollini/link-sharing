@@ -1,6 +1,6 @@
 <template>
-  <svg class="icon" :class="customClass">
-    <use :xlink:href="spritePath"></use>
+  <svg class="icon" :class="customClass" aria-hidden="true">
+    <use :href="spritePath" :fill="props.color" />
   </svg>
 </template>
 
@@ -8,17 +8,17 @@
 import { computed } from 'vue';
 
 const props = defineProps({
-  name: { String, required: true },
-  customClass: { String, default: '' }
+  name: { type: String, required: true },
+  customClass: { type: String, default: '' },
+  color: { type: String, default: '#757575' }
 });
 
-const spritePath = computed(() => `/src/assets/stack/svg/sprite.css.svg#${props.name}`);
+const spritePath = computed(() => `#${props.name}`);
 </script>
 
 <style scoped>
 .icon {
   width: 16px;
   height: 16px;
-  fill: currentColor;
 }
 </style>
