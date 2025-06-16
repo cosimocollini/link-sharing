@@ -44,7 +44,7 @@ export const LINKS = {
     color: '#8A1A50',
     icon: 'codewars'
   },
-  freecodecamp: {
+  freecode: {
     label: 'freeCodeCamp',
     color: '#302267',
     icon: 'freecode'

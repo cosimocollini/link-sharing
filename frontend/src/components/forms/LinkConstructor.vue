@@ -56,12 +56,12 @@ const onRemove = () => {
       input-id="link-URL-{{ props.index }}"
       label="Link"
       icon="link"
-      class="mt-2 mb-0"
+      class="mt-2 mb-0 full-width"
     />
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @use '@/scss/abstracts' as *;
 
 .link-constructor {
@@ -86,6 +86,13 @@ const onRemove = () => {
   .field {
     margin-bottom: 0;
     width: 100%;
+    background-color: unset;
+
+    &__input-wrapper {
+      input {
+        width: 100%;
+      }
+    }
   }
 }
 </style>

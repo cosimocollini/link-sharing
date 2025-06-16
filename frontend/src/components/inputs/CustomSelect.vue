@@ -55,6 +55,7 @@ const selectedLabel = computed(() => {
         :side-offset="8"
         :align="'start'"
         :position="'popper'"
+        positionStrategy="fixed"
       >
         <SelectViewport class="SelectViewport">
           <SelectGroup>
@@ -130,6 +131,7 @@ const selectedLabel = computed(() => {
   border: 1px solid $color-grey-medium;
   width: var(--reka-select-trigger-width);
   max-height: var(--reka-select-content-available-height);
+  z-index: 999;
   // max-height: 176px;
 }
 

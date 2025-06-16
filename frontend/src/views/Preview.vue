@@ -37,7 +37,9 @@ const store = useFormStore();
         }}</span>
         <SvgIcon v-if="link.name" name="arrow-right" color="#FFF" />
       </div>
-      <div v-for="i in 5" v-if="store.links.length === 0" :key="i" class="link empty"></div>
+      <template v-for="(n, i) in 5" :key="i">
+        <div v-if="!store.links[i]" class="link empty"></div>
+      </template>
     </div>
   </div>
 </template>
