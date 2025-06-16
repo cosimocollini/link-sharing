@@ -15,7 +15,7 @@ export default defineConfig({
       // Specify the icon folder to be cached
       iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
       // Specify symbolId format
-      symbolId: '[name]'
+      symbolId: 'icon-[name]'
     }),
     Components({
       dirs: ['src/components'],

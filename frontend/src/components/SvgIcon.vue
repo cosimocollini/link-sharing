@@ -13,7 +13,7 @@ const props = defineProps({
   color: { type: String, default: '#757575' }
 });
 
-const spritePath = computed(() => `#${props.name}`);
+const spritePath = computed(() => `#icon-${props.name}`);
 </script>
 
 <style scoped>
