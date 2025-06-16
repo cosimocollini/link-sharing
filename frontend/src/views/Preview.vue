@@ -31,7 +31,7 @@ const store = useFormStore();
         :style="{ backgroundColor: LINKS[link.name as keyof typeof LINKS]?.color }"
         :key="i"
       >
-        <SvgIcon v-if="link.name" :name="link.name" />
+        <SvgIcon v-if="link.name" :name="link.name" color="#FFF" />
         <span v-if="link.name" class="ml-1">{{
           LINKS[link.name as keyof typeof LINKS]?.label
         }}</span>
@@ -118,6 +118,9 @@ const store = useFormStore();
       }
 
       svg {
+        fill: $white;
+        color: $white;
+
         &:last-child {
           margin-left: auto;
         }

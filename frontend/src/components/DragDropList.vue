@@ -1,20 +1,21 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-interface ListItem {
-  id: number | string;
-  content: string;
+interface Link {
+  id: string;
+  name?: string;
+  url?: string;
 }
 
 const props = defineProps<{
-  initialItems: ListItem[];
+  initialItems: Link[];
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:items', items: ListItem[]): void;
+  (e: 'update:items', items: Link[]): void;
 }>();
 
-const items = ref<ListItem[]>([...props.initialItems]);
+const items = ref<Link[]>([...props.initialItems]);
 const isDragging = ref(false);
 const dragIndex = ref<number | null>(null);
 const dragOverIndex = ref<number | null>(null);
@@ -29,15 +30,15 @@ const displayItems = computed(() => {
     dragOverIndex.value === null ||
     originalIndex.value === null
   ) {
-    return items.value;
+    return props.initialItems;
   }
 
-  const draggedItem = items.value.find((item) => item.id === dragItemId.value);
-  if (!draggedItem) return items.value;
+  const draggedItem = props.initialItems.find((item) => item.id === dragItemId.value);
+  if (!draggedItem) return props.initialItems;
 
-  const result = [...items.value];
+  const result = [...props.initialItems];
 
-  const tempResult = [...items.value];
+  const tempResult = [...props.initialItems];
   tempResult.splice(originalIndex.value, 1);
   tempResult.splice(dragOverIndex.value, 0, draggedItem);
 

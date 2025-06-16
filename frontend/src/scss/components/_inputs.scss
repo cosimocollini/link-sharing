@@ -3,6 +3,7 @@
 .field {
   display: inline-block;
   margin-bottom: rem(12);
+  background-color: $white;
 
   &--full-width {
     display: block;

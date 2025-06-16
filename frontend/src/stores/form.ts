@@ -1,35 +1,35 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 
-interface Link {
-  id: string;
-  name: string;
-  url: string;
-}
+import type { Link } from '@/services/types';
 
 export const useFormStore = defineStore('form', () => {
   const links = ref<Link[]>([
     { id: crypto.randomUUID(), name: 'github', url: 'https://example.com' }
   ]);
 
-  const addLink = (name: string, url: string) => {
+  const addLink = () => {
     const newLink: Link = {
       id: crypto.randomUUID(),
-      name,
-      url
+      name: '',
+      url: ''
     };
     links.value.push(newLink);
   };
   const removeLink = (id: string) => {
     links.value = links.value.filter((link) => link.id !== id);
   };
-  const updateLink = (id: string, name: string, url: string) => {
-    const link = links.value.find((link) => link.id === id);
+  const updateLink = (newLink: Link) => {
+    const link = links.value.find((link) => newLink.id === link.id);
     if (link) {
-      link.name = name;
-      link.url = url;
+      link.name = newLink.name;
+      link.url = newLink.url;
     }
   };
 
-  return { links, addLink, removeLink, updateLink };
+  const getLinks = computed(() => {
+    return links.value;
+  });
+
+  return { links, addLink, removeLink, updateLink, getLinks };
 });

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import SvgIcon from '../SvgIcon.vue';
-import { ref } from 'vue';
+import SvgIcon from '@/components/SvgIcon.vue';
+import { ref, computed, toRefs } from 'vue';
 import {
   Label,
   SelectContent,
@@ -10,20 +10,43 @@ import {
   SelectRoot,
   SelectTrigger,
   SelectValue,
-  SelectViewport
+  SelectViewport,
+  useForwardPropsEmits
 } from 'reka-ui';
+import type { SelectRootEmits, SelectRootProps } from 'reka-ui';
 
 import { LINKS } from '@/constants';
 
-const fruit = ref();
+const props = defineProps<SelectRootProps>();
+const emits = defineEmits<SelectRootEmits>();
+
+const forward = useForwardPropsEmits(props, emits);
+
+const { modelValue } = toRefs(props);
+
+const options = computed(() =>
+  Object.entries(LINKS).map(([key, { label, icon }]) => ({
+    value: key,
+    label,
+    icon
+  }))
+);
+
+const selectedLabel = computed(() => {
+  const found = options.value.find((opt) => opt.value === modelValue.value);
+  return found ? found.label : '';
+});
 </script>
 
 <template>
   <Label>
     <span class="body-s">Platform</span>
-    <SelectRoot v-model="fruit">
+    <SelectRoot v-bind="forward">
       <SelectTrigger class="SelectTrigger" aria-label="Customise options">
-        <SelectValue placeholder="Select a platform..." />
+        <SelectValue placeholder="Select a platform...">
+          <SvgIcon v-if="modelValue" :name="modelValue as string" />
+          {{ selectedLabel || 'Select a platform...' }}
+        </SelectValue>
         <SvgIcon name="arrow"></SvgIcon>
       </SelectTrigger>
 
@@ -39,7 +62,7 @@ const fruit = ref();
               v-for="(option, index) in LINKS"
               :key="index"
               class="SelectItem"
-              :value="option.label"
+              :value="option.icon"
             >
               <SvgIcon :name="option.icon"></SvgIcon>
               <SelectItemText>
@@ -81,6 +104,12 @@ const fruit = ref();
     > svg {
       transform: rotate(180deg);
     }
+  }
+
+  > span {
+    display: flex;
+    align-self: center;
+    gap: 16px;
   }
 }
 .SelectTrigger:hover {

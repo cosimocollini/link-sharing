@@ -2,25 +2,25 @@
 import Button from '@/components/CustomButton.vue';
 import LinkConstructor from '@/components/forms/LinkConstructor.vue';
 import DragDropList from '@/components/DragDropList.vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { useFormStore } from '@/stores/form';
+import type { Link } from '@/services/types';
 
-interface ListItem {
-  id: number | string;
-  content: string;
-}
+const formStore = useFormStore();
 
-const items = ref<ListItem[]>([
-  { id: 1, content: 'Completare il report' },
-  { id: 2, content: 'Inviare email al team' },
-  { id: 3, content: 'Preparare la presentazione' },
-  { id: 4, content: 'Partecipare alla riunione' },
-  { id: 5, content: 'Aggiornare la documentazione' }
-]);
-
-const updateItems = (newItems: ListItem[]) => {
-  items.value = newItems;
+const updateItems = (newItems: Link[]) => {
+  formStore.links = newItems;
   console.log('Lista aggiornata:', newItems);
 };
+
+const updateLink = (newLink: Link) => {
+  formStore.updateLink(newLink);
+  console.log('Link aggiornato:', newLink);
+};
+
+const getLinks = computed(() => {
+  return formStore.getLinks;
+});
 </script>
 
 <template>
@@ -30,7 +30,13 @@ const updateItems = (newItems: ListItem[]) => {
       <p class="body-m mb-5">
         Add/edit/remove links below and then share all your profiles with the world!
       </p>
-      <Button label="+ Add new link" :full-width="true" level="secondary"></Button>
+      <Button
+        label="+ Add new link"
+        :full-width="true"
+        level="secondary"
+        role="button"
+        @click="formStore.addLink"
+      ></Button>
     </div>
 
     <div class="empty-link-list-banner px-5 mb-5" v-if="false">
@@ -118,9 +124,9 @@ const updateItems = (newItems: ListItem[]) => {
     </div>
 
     <div class="links-list px-5">
-      <DragDropList :initialItems="items" @update:items="updateItems">
-        <template #item="{ item, index}">
-          <LinkConstructor :data="item" :index="index" />
+      <DragDropList :initialItems="getLinks" @update:items="updateItems">
+        <template #item="{ item, index }">
+          <LinkConstructor :modelValue="item" :index="index" @updatelink="updateLink" />
         </template>
       </DragDropList>
     </div>
