@@ -9,3 +9,10 @@ export interface Link {
   name?: string;
   url?: string;
 }
+
+export interface UserDetails {
+  firstName: string;
+  lastName: string;
+  email?: string;
+  profilePicture?: File | undefined;
+}

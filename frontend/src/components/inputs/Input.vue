@@ -7,6 +7,17 @@ const emit = defineEmits<{
   (e: 'click', id: number): void;
 }>();
 
+const [model, modifiers] = defineModel<string | undefined>({
+  type: String,
+  default: undefined,
+  set(value: string | undefined) {
+    if (modifiers.lowercase) {
+      return value?.toLowerCase();
+    }
+    return value;
+  }
+});
+
 const props = withDefaults(
   defineProps<{
     //modelValue: string;
@@ -43,10 +54,10 @@ const {
     <div class="field__input-wrapper">
       <SvgIcon v-if="props.icon" :name="props.icon" />
       <input
+        v-model="model"
         :name="name"
         :id="name"
         :type="type"
-        :value="inputValue"
         :placeholder="placeholder"
         :required="required"
         @input="handleChange"

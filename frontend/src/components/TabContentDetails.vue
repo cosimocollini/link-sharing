@@ -2,6 +2,20 @@
 import InputFile from '@/components/inputs/InputFile.vue';
 import Input from '@/components/inputs/Input.vue';
 import Button from '@/components/CustomButton.vue';
+
+import { useFormStore } from '@/stores/form';
+import { toRefs, ref } from 'vue';
+
+const formStore = useFormStore();
+
+const updateUserDetails = () => {
+  // This function can be used to update user details in the store
+  // For now, it does nothing but can be expanded later
+  console.log('User details updated:', formStore.userDetails);
+};
+
+const { firstName, lastName, email, profilePicture } = toRefs(formStore.userDetails);
+// const profilePicture = ref<Blob | undefined>((formStore.userDetails.profilePicture as Blob) || undefined);
 </script>
 
 <template>
@@ -11,10 +25,11 @@ import Button from '@/components/CustomButton.vue';
       <p class="body-m mb-5">Add your details to create a personal touch to your profile.</p>
 
       <form action="" method="post">
-        <InputFile inputId="profileImage"></InputFile>
+        <InputFile inputId="profileImage" v-model="profilePicture"></InputFile>
 
         <div class="personal-data-wrapper mt-3">
           <Input
+            v-model.trim="firstName"
             name="firstName"
             type="text"
             placeholder="e.g. John"
@@ -23,6 +38,7 @@ import Button from '@/components/CustomButton.vue';
             :required="true"
           />
           <Input
+            v-model.trim="lastName"
             name="lastName"
             type="text"
             placeholder="e.g. Appleseed"
@@ -31,6 +47,7 @@ import Button from '@/components/CustomButton.vue';
             :required="true"
           />
           <Input
+            v-model.lowercase="email"
             name="email"
             type="email"
             placeholder="e.g. email@example.com"

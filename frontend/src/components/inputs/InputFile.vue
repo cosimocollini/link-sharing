@@ -6,38 +6,32 @@ import SvgIcon from '../SvgIcon.vue';
 const props = defineProps<{
   inputId: string;
   rules?: any;
-  value?: string;
+  modelValue: File | undefined;
+}>();
+
+const emit = defineEmits<{
+  (e: 'update:modelValue', file: File | undefined): void;
 }>();
 
 const bgImage = ref('');
 
 const {
-  value: inputValue,
+  value: modelValue,
   errorMessage,
   handleChange,
   meta
 } = useField('fileUpload', props.rules, {
-  initialValue: props.value || null
+  initialValue: props.modelValue || null
 });
 
 const dropZoneEl = ref<HTMLElement | null>(null);
 
 const processFile = (file: File) => {
-  const _URL = window.URL || window.webkitURL;
-  let img = new Image();
-  const objectUrl = _URL.createObjectURL(file);
-  img.onload = () => {
-    _URL.revokeObjectURL(objectUrl);
-  };
-  img.src = objectUrl;
-  bgImage.value = objectUrl;
-
-  const fakeEvent = {
-    target: {
-      files: [file]
-    }
-  } as unknown as Event;
-  handleChange(fakeEvent);
+  const url = URL.createObjectURL(file);
+  if (bgImage.value) URL.revokeObjectURL(bgImage.value);
+  bgImage.value = url;
+  emit('update:modelValue', file);
+  handleChange(file);
 };
 
 const handleUpload = (e: Event) => {

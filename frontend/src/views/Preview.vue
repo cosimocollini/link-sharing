@@ -4,6 +4,12 @@ import { useFormStore } from '@/stores/form';
 import { LINKS } from '@/constants';
 
 const store = useFormStore();
+
+const userImage = computed(() => {
+  return store.userDetails.profilePicture
+    ? URL.createObjectURL(store.userDetails.profilePicture)
+    : false;
+});
 </script>
 
 <template>
@@ -20,9 +26,22 @@ const store = useFormStore();
       />
     </svg>
     <div class="content-wrapper">
-      <div class="image empty"></div>
-      <div class="name empty"></div>
-      <div class="email empty"></div>
+      <div
+        class="image"
+        :class="{ empty: !userImage }"
+        :style="{ backgroundImage: userImage ? `url(${userImage})` : 'none' }"
+      ></div>
+      <div
+        class="name px-4"
+        :class="{ empty: !store.userDetails.firstName || !store.userDetails.lastName }"
+      >
+        <span v-if="store.userDetails.firstName && store.userDetails.lastName"
+          >{{ store.userDetails.firstName }} {{ store.userDetails.lastName }}</span
+        >
+      </div>
+      <div class="email px-4" :class="{ empty: !store.userDetails.email }">
+        <span v-if="store.userDetails.email">{{ store.userDetails.email }}</span>
+      </div>
       <div
         v-if="store.links.length > 0"
         v-for="(link, i) in store.links"
@@ -82,11 +101,18 @@ const store = useFormStore();
       height: 100px;
       border-radius: 50%;
       margin: 24px auto 0;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
     }
 
     .name {
       display: block;
       margin: 24px auto 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: $color-dark;
+      text-align: center;
 
       &.empty {
         width: 160px;
@@ -98,6 +124,7 @@ const store = useFormStore();
     .email {
       display: block;
       margin: 12px auto 56px auto;
+      text-align: center;
 
       &.empty {
         width: 72px;

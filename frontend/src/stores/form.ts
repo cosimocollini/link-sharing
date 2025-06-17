@@ -1,12 +1,20 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 
-import type { Link } from '@/services/types';
+import type { Link, UserDetails } from '@/services/types';
+import type { User } from '@/services/users/types';
 
 export const useFormStore = defineStore('form', () => {
   const links = ref<Link[]>([
     { id: crypto.randomUUID(), name: 'github', url: 'https://example.com' }
   ]);
+
+  const userDetails = ref<UserDetails>({
+    firstName: '',
+    lastName: '',
+    email: '',
+    profilePicture: undefined
+  });
 
   const addLink = () => {
     const newLink: Link = {
@@ -31,5 +39,5 @@ export const useFormStore = defineStore('form', () => {
     return links.value;
   });
 
-  return { links, addLink, removeLink, updateLink, getLinks };
+  return { links, userDetails, addLink, removeLink, updateLink, getLinks };
 });
