@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 
 export const userDetailsSchema = yup.object({
-  email: yup.string().nullable().email('Must be a valid email').required("Can't be empty"),
+  email: yup.string().nullable().email('Must be a valid email'),
   firstName: yup
     .string()
     .required('Please check again')

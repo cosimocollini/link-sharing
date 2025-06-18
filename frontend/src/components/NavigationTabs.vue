@@ -5,7 +5,7 @@ import TabContentLinks from './TabContentLinks.vue';
 </script>
 
 <template>
-  <TabsRoot class="TabsRoot" default-value="tab1">
+  <TabsRoot class="TabsRoot" default-value="tab1" :unmountOnHide="false">
     <TabsList class="TabsList" aria-label="Manage your account">
       <TabsIndicator class="TagsIndicator">
         <div style="width: 100%; height: 100%" class="bg-grass8 w-full h-full" />
