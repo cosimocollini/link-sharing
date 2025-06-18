@@ -104,6 +104,10 @@ const userImage = computed(() => {
       background-repeat: no-repeat;
       background-size: cover;
       background-position: center;
+
+      &:not(.empty) {
+        outline: 4px solid $color-main;
+      }
     }
 
     .name {

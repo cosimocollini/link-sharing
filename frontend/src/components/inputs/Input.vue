@@ -62,8 +62,10 @@ const {
         :required="required"
         @input="handleChange"
         @blur="handleBlur"
+        :aria-invalid="errorMessage || meta.valid ? 'true' : 'false'"
+        :aria-errormessage="`errormessage-${name}`"
       />
-      <p class="message" v-show="errorMessage || meta.valid">
+      <p class="message" v-show="errorMessage || meta.valid" :id="`errormessage-${name}`">
         {{ errorMessage }}
       </p>
     </div>

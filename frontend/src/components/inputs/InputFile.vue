@@ -84,7 +84,7 @@ const onKeyDown = (e: Event) => {
     <button
       ref="dropZoneEl"
       class="file-upload-dropzone"
-      role="button"
+      type="button"
       aria-label="Upload image"
       tabindex="0"
       @keydown="onKeyDown"

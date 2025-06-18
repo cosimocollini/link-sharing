@@ -4,18 +4,25 @@ import Input from '@/components/inputs/Input.vue';
 import Button from '@/components/CustomButton.vue';
 
 import { useFormStore } from '@/stores/form';
-import { toRefs, ref } from 'vue';
+import { toRefs } from 'vue';
+
+import { useForm } from 'vee-validate';
+import { userDetailsSchema } from '@/services/validations';
+
+import type { UserDetails } from '@/services/types';
 
 const formStore = useFormStore();
 
-const updateUserDetails = () => {
-  // This function can be used to update user details in the store
-  // For now, it does nothing but can be expanded later
-  console.log('User details updated:', formStore.userDetails);
-};
-
 const { firstName, lastName, email, profilePicture } = toRefs(formStore.userDetails);
-// const profilePicture = ref<Blob | undefined>((formStore.userDetails.profilePicture as Blob) || undefined);
+
+const { handleSubmit } = useForm<UserDetails>({
+  validationSchema: userDetailsSchema
+});
+
+const onSubmit = handleSubmit(async (values) => {
+  console.log('User details updated:', values);
+  // const { success, status } = await for.dispatchRegisterUser(values);
+});
 </script>
 
 <template>
@@ -24,7 +31,7 @@ const { firstName, lastName, email, profilePicture } = toRefs(formStore.userDeta
       <h1 class="heading-m mt-0">Profile details</h1>
       <p class="body-m mb-5">Add your details to create a personal touch to your profile.</p>
 
-      <form action="" method="post">
+      <form novalidate @submit.prevent="onSubmit">
         <InputFile inputId="profileImage" v-model="profilePicture"></InputFile>
 
         <div class="personal-data-wrapper mt-3">
@@ -59,7 +66,13 @@ const { firstName, lastName, email, profilePicture } = toRefs(formStore.userDeta
     </div>
 
     <div class="footer py-4 px-3">
-      <Button label="Save" level="primary" :disable="true"></Button>
+      <Button
+        label="Save"
+        level="primary"
+        :disable="false"
+        type="submit"
+        @click="() => onSubmit()"
+      ></Button>
     </div>
   </div>
 </template>

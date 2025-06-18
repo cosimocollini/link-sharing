@@ -48,6 +48,7 @@
       @extend .body-m;
       display: block;
       border: none;
+      width: 100%;
 
       &:focus {
         outline: none;
@@ -61,6 +62,8 @@
     .message {
       @extend .body-s;
       margin: 0;
+      white-space: nowrap;
+      margin-left: 16px;
     }
   }
 }
