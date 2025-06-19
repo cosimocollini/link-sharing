@@ -16,13 +16,14 @@ import {
 import type { SelectRootEmits, SelectRootProps } from 'reka-ui';
 
 import { LINKS } from '@/constants';
+import { useField } from 'vee-validate';
 
 const props = defineProps<SelectRootProps>();
 const emits = defineEmits<SelectRootEmits>();
 
 const forward = useForwardPropsEmits(props, emits);
 
-const { modelValue } = toRefs(props);
+const { modelValue, name } = toRefs(props);
 
 const options = computed(() =>
   Object.entries(LINKS).map(([key, { label, icon }]) => ({
@@ -36,17 +37,29 @@ const selectedLabel = computed(() => {
   const found = options.value.find((opt) => opt.value === modelValue.value);
   return found ? found.label : '';
 });
+
+const { errorMessage, handleChange, meta } = useField(name.value || '', {
+  initialValue: modelValue.value
+});
 </script>
 
 <template>
   <Label>
-    <span class="body-s">Platform</span>
+    <span class="body-s select-label" :class="{ error: errorMessage }">Platform</span>
     <SelectRoot v-bind="forward">
-      <SelectTrigger class="SelectTrigger" aria-label="Customise options">
+      <SelectTrigger
+        class="SelectTrigger"
+        aria-label="Select a platform"
+        :aria-invalid="errorMessage ? 'true' : 'false'"
+        :aria-errormessage="`errormessage-${name}`"
+      >
         <SelectValue placeholder="Select a platform...">
           <SvgIcon v-if="modelValue" :name="modelValue as string" />
           {{ selectedLabel || 'Select a platform...' }}
         </SelectValue>
+        <p class="message" v-show="errorMessage || meta.valid" :id="`errormessage-${name}`">
+          {{ errorMessage }}
+        </p>
         <SvgIcon name="arrow"></SvgIcon>
       </SelectTrigger>
 
@@ -80,6 +93,12 @@ const selectedLabel = computed(() => {
 <style lang="scss">
 @use '@/scss/abstracts' as *;
 
+.select-label {
+  &.error {
+    color: $red;
+  }
+}
+
 .SelectTrigger {
   display: inline-flex;
   align-items: center;
@@ -93,6 +112,19 @@ const selectedLabel = computed(() => {
   border: 1px solid $color-grey-medium;
   cursor: pointer;
   width: 100%;
+
+  &[aria-invalid='true'] {
+    border-color: $red;
+  }
+
+  .message {
+    @extend .body-s;
+    margin: 0;
+    white-space: nowrap;
+    margin-left: auto;
+    margin-right: 8px;
+    color: $red;
+  }
 
   > svg {
     transition: 0.2s ease-in-out;

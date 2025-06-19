@@ -4,7 +4,7 @@ import Input from '@/components/inputs/Input.vue';
 import Button from '@/components/CustomButton.vue';
 
 import type { Link } from '@/services/types';
-import { toRefs } from 'vue';
+import { reactive } from 'vue';
 import type { AcceptableValue } from 'reka-ui';
 
 interface Props {
@@ -14,20 +14,22 @@ interface Props {
 
 const props = defineProps<Props>();
 
-interface Emits {
-  (e: 'updatelink', newLink: Link): void;
+const emit = defineEmits<{
+  (e: 'update:modelValue', updated: Link): void;
   (e: 'remove'): void;
-}
-const emit = defineEmits<Emits>();
+}>();
 
-const { modelValue: link } = toRefs(props);
+const localLink = reactive({ ...props.modelValue });
 
 const updateLinkName = (value: AcceptableValue) => {
-  emit('updatelink', { ...link.value, name: value as string });
+  const name = value === null ? undefined : (value as string | undefined);
+  const updated = { ...localLink, name };
+  emit('update:modelValue', updated);
 };
 
-const updateLinkUrl = (value: string) => {
-  emit('updatelink', { ...link.value, url: value });
+const updateLinkUrl = (value: string | undefined) => {
+  const updated = { ...localLink, url: value };
+  emit('update:modelValue', updated);
 };
 
 const onRemove = () => {
@@ -44,16 +46,20 @@ const onRemove = () => {
         </svg>
         Link #{{ index + 1 }}
       </p>
-      <Button label="Remove" level="blank" @click="onRemove"></Button>
+      <Button label="Remove" level="blank" type="button" @click="onRemove"></Button>
     </div>
-    <Select v-model="link.name" @update:model-value="updateLinkName" />
+    <Select
+      v-model="localLink.name"
+      @update:model-value="updateLinkName"
+      :name="`links[${props.index}].name`"
+    />
     <Input
-      v-model="link.url"
+      v-model="localLink.url"
       @update:model-value="updateLinkUrl"
-      name="link"
+      :name="`links[${props.index}].url`"
       type="text"
       placeholder="e.g. https://www.github.com/johnappleseed"
-      input-id="link-URL-{{ props.index }}"
+      input-id="`link-URL-${ props.index }`"
       label="Link"
       icon="link"
       class="mt-2 mb-0 full-width"
@@ -91,6 +97,7 @@ const onRemove = () => {
     &__input-wrapper {
       input {
         width: 100%;
+        background-color: $white;
       }
     }
   }

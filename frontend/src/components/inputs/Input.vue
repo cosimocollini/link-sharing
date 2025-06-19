@@ -3,10 +3,6 @@ import { toRef } from 'vue';
 import { useField } from 'vee-validate';
 import SvgIcon from '@/components/SvgIcon.vue';
 
-const emit = defineEmits<{
-  (e: 'click', id: number): void;
-}>();
-
 const [model, modifiers] = defineModel<string | undefined>({
   type: String,
   default: undefined,
@@ -37,13 +33,7 @@ const props = withDefaults(
 
 const name = toRef(props, 'name');
 
-const {
-  value: inputValue,
-  errorMessage,
-  handleBlur,
-  handleChange,
-  meta
-} = useField(name, props.rules, {
+const { value, errorMessage, handleBlur, handleChange, meta } = useField(name, props.rules, {
   initialValue: props.value
 });
 </script>
@@ -62,7 +52,7 @@ const {
         :required="required"
         @input="handleChange"
         @blur="handleBlur"
-        :aria-invalid="errorMessage || meta.valid ? 'true' : 'false'"
+        :aria-invalid="errorMessage ? 'true' : 'false'"
         :aria-errormessage="`errormessage-${name}`"
       />
       <p class="message" v-show="errorMessage || meta.valid" :id="`errormessage-${name}`">

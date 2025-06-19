@@ -4,23 +4,40 @@ import LinkConstructor from '@/components/forms/LinkConstructor.vue';
 import DragDropList from '@/components/DragDropList.vue';
 import { computed, ref } from 'vue';
 import { useFormStore } from '@/stores/form';
+
+import { useFieldArray, useForm } from 'vee-validate';
+import { linkListSchema } from '@/services/validations';
+
 import type { Link } from '@/services/types';
 
 const formStore = useFormStore();
+
+const links = computed(() => formStore.getLinks);
+
+const { handleSubmit, values, errors } = useForm<Link[]>({
+  validationSchema: linkListSchema, // schema Yup con links: Link[]
+  initialValues: formStore.getLinks // inizializzo con i tuoi dati
+});
 
 const updateItems = (newItems: Link[]) => {
   formStore.links = newItems;
   console.log('Lista aggiornata:', newItems);
 };
 
-const updateLink = (newLink: Link) => {
-  formStore.updateLink(newLink);
-  console.log('Link aggiornato:', newLink);
+const updateLink = (index: number, updated: Link) => {
+  // values.links[index] = updated;
+  formStore.updateLink(updated);
+  console.log('Link aggiornato:', updated);
 };
 
-const getLinks = computed(() => {
-  return formStore.getLinks;
+const onSubmit = handleSubmit(async (values: any) => {
+  console.log('Form submitted with links:', values);
 });
+
+function addLink() {
+  // push({ name: '', url: '' });
+  formStore.addLink();
+}
 </script>
 
 <template>
@@ -34,12 +51,12 @@ const getLinks = computed(() => {
         label="+ Add new link"
         :full-width="true"
         level="secondary"
-        role="button"
-        @click="formStore.addLink"
+        type="button"
+        @click="addLink"
       ></Button>
     </div>
 
-    <div class="empty-link-list-banner px-5 mb-5" v-if="false">
+    <div class="empty-link-list-banner px-5 mb-5" v-if="links.length === 0">
       <div class="empty-link-list-svg">
         <svg xmlns="http://www.w3.org/2000/svg" width="250" height="161" fill="none">
           <path
@@ -123,16 +140,26 @@ const getLinks = computed(() => {
       </p>
     </div>
 
-    <div class="links-list px-5">
-      <DragDropList :initialItems="getLinks" @update:items="updateItems">
+    <form v-else class="links-list px-5" novalidate @submit.prevent="onSubmit">
+      <DragDropList :initialItems="links" @update:items="updateItems">
         <template #item="{ item, index }">
-          <LinkConstructor :modelValue="item" :index="index" @updatelink="updateLink" />
+          <LinkConstructor
+            :model-value="item"
+            :index="index"
+            @update:model-value="(updated) => updateLink(index, updated)"
+          />
         </template>
       </DragDropList>
-    </div>
+    </form>
 
     <div class="footer py-4 px-3">
-      <Button label="Save" level="primary" :disable="true"></Button>
+      <Button
+        label="Save"
+        level="primary"
+        :disable="false"
+        type="submit"
+        @click="() => onSubmit()"
+      />
     </div>
   </div>
 </template>

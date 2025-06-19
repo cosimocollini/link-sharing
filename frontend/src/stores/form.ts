@@ -5,9 +5,7 @@ import type { Link, UserDetails } from '@/services/types';
 import type { User } from '@/services/users/types';
 
 export const useFormStore = defineStore('form', () => {
-  const links = ref<Link[]>([
-    { id: crypto.randomUUID(), name: 'github', url: 'https://example.com' }
-  ]);
+  const links = ref<Link[]>([]);
 
   const userDetails = ref<UserDetails>({
     firstName: '',

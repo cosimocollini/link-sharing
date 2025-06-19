@@ -30,3 +30,12 @@ export const userDetailsSchema = yup.object({
       return false;
     })
 });
+
+export const linkConstructorSchema = yup.object({
+  name: yup.string().required('Platform is required'),
+  url: yup.string().url('Must be a valid URL').required('Link is required')
+});
+
+export const linkListSchema = yup.object({
+  links: yup.array().of(linkConstructorSchema).min(1, 'At least one link is required')
+});
