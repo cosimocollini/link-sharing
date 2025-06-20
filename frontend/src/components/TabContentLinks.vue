@@ -2,21 +2,23 @@
 import Button from '@/components/CustomButton.vue';
 import LinkConstructor from '@/components/forms/LinkConstructor.vue';
 import DragDropList from '@/components/DragDropList.vue';
-import { computed, ref } from 'vue';
+import { computed, inject } from 'vue';
 import { useFormStore } from '@/stores/form';
 
-import { useFieldArray, useForm } from 'vee-validate';
+import { useForm } from 'vee-validate';
 import { linkListSchema } from '@/services/validations';
 
 import type { Link } from '@/services/types';
 
 const formStore = useFormStore();
 
+const startNotification = inject('notification') as () => void;
+
 const links = computed(() => formStore.getLinks);
 
-const { handleSubmit, values, errors } = useForm<Link[]>({
-  validationSchema: linkListSchema, // schema Yup con links: Link[]
-  initialValues: formStore.getLinks // inizializzo con i tuoi dati
+const { handleSubmit, errors } = useForm<Link[]>({
+  validationSchema: linkListSchema,
+  initialValues: formStore.getLinks
 });
 
 const updateItems = (newItems: Link[]) => {
@@ -25,13 +27,13 @@ const updateItems = (newItems: Link[]) => {
 };
 
 const updateLink = (index: number, updated: Link) => {
-  // values.links[index] = updated;
   formStore.updateLink(updated);
   console.log('Link aggiornato:', updated);
 };
 
 const onSubmit = handleSubmit(async (values: any) => {
   console.log('Form submitted with links:', values);
+  startNotification();
 });
 
 function addLink() {

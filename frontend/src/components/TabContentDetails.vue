@@ -4,7 +4,7 @@ import Input from '@/components/inputs/Input.vue';
 import Button from '@/components/CustomButton.vue';
 
 import { useFormStore } from '@/stores/form';
-import { toRefs } from 'vue';
+import { toRefs, inject } from 'vue';
 
 import { useForm } from 'vee-validate';
 import { userDetailsSchema } from '@/services/validations';
@@ -12,6 +12,8 @@ import { userDetailsSchema } from '@/services/validations';
 import type { UserDetails } from '@/services/types';
 
 const formStore = useFormStore();
+
+const startNotification = inject('notification') as () => void;
 
 const { firstName, lastName, email, profilePicture } = toRefs(formStore.userDetails);
 
@@ -22,6 +24,7 @@ const { handleSubmit } = useForm<UserDetails>({
 const onSubmit = handleSubmit(async (values) => {
   console.log('User details updated:', values);
   // const { success, status } = await for.dispatchRegisterUser(values);
+  startNotification();
 });
 </script>
 
