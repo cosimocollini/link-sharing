@@ -46,7 +46,7 @@ const { errorMessage, handleChange, meta } = useField(name.value || '', {
 <template>
   <Label>
     <span class="body-s select-label" :class="{ error: errorMessage }">Platform</span>
-    <SelectRoot v-bind="forward">
+    <SelectRoot v-bind="forward" @update:model-value="handleChange">
       <SelectTrigger
         class="SelectTrigger"
         aria-label="Select a platform"

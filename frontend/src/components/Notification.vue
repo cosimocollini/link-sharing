@@ -34,6 +34,7 @@ provide('notification', startNotification);
   list-style-type: none;
   padding: 0;
   margin-bottom: rem(40);
+  transform: translateX(-50%);
 
   .ToastRoot {
     background-color: $color-dark;
