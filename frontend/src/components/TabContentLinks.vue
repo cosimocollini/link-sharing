@@ -16,7 +16,7 @@ const startNotification = inject('notification') as () => void;
 
 const links = computed(() => formStore.getLinks);
 
-const { handleSubmit, errors } = useForm<Link[]>({
+const { handleSubmit, isSubmitting, errors } = useForm<Link[]>({
   validationSchema: linkListSchema,
   initialValues: formStore.getLinks
 });
@@ -158,7 +158,7 @@ function addLink() {
       <Button
         label="Save"
         level="primary"
-        :disable="false"
+        :disable="isSubmitting"
         type="submit"
         @click="() => onSubmit()"
       />

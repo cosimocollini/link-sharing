@@ -19,7 +19,7 @@
         label="Password"
         icon="lock"
       />
-      <Button label="Login" type="submit" />
+      <Button label="Login" type="submit" :disable="isSubmitting" />
     </form>
     <p class="txt-center mb-0">
       Don't have an account? <RouterLink to="/register">Create account</RouterLink>
@@ -37,7 +37,7 @@ interface LoginForm {
   password: string;
 }
 
-const { submitForm } = useForm<LoginForm>();
+const { submitForm, isSubmitting } = useForm<LoginForm>();
 </script>
 
 <style lang="scss" scoped>

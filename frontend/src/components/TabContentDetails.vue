@@ -17,7 +17,7 @@ const startNotification = inject('notification') as () => void;
 
 const { firstName, lastName, email, profilePicture } = toRefs(formStore.userDetails);
 
-const { handleSubmit } = useForm<UserDetails>({
+const { handleSubmit, isSubmitting } = useForm<UserDetails>({
   validationSchema: userDetailsSchema
 });
 
@@ -72,7 +72,7 @@ const onSubmit = handleSubmit(async (values) => {
       <Button
         label="Save"
         level="primary"
-        :disable="false"
+        :disable="isSubmitting"
         type="submit"
         @click="() => onSubmit()"
       ></Button>
