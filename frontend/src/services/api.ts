@@ -1,6 +1,17 @@
 import axios from 'axios';
 
-const instance = axios.create({
-  baseURL: import.meta.env.VITE_API_ENDPOINT,
+import type { APIResponse, User, InputCreateUser } from './types';
+
+const http = axios.create({
+  baseURL: import.meta.env.VITE_API_ENDPOINT
 });
-export default instance
+
+async function getUser() {
+  return await http.get<APIResponse<User[]>>('register');
+}
+
+async function createUser(input: InputCreateUser) {
+  return await http.post<APIResponse<User>>('register', input, { headers: {} });
+}
+
+export default { getUser, createUser };

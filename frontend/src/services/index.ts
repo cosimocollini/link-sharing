@@ -1,5 +1,5 @@
-import userController from "./users";
+import services from './api';
 
 export const API = {
-  users: userController,
+  users: services
 };
