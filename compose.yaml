@@ -1,17 +1,25 @@
 services:
-  app:
-    build: ./backend
-    image: link-sharing
-    container_name: link-sharing
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
     volumes:
-      - ./backend:/app
-      - /app/tmp
+      - ./backend:/app         # codice Go live‑reload
+      - sqlite-data:/data      # DB persistente in locale
     ports:
       - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
     environment:
-      - CONNECTION_STRING=${CONNECTION_STRING}
-      - TURSO_DATABASE_URL=${TURSO_DATABASE_URL}
-      - TURSO_AUTH_TOKEN=${TURSO_AUTH_TOKEN}
-      - JWT_SECRET=${JWT_SECRET}
-    command: air -c .air.toml
-    restart: no
+      - VITE_API_BASE_URL=http://localhost:8080
+
+volumes:
+  sqlite-data:
