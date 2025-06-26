@@ -4,7 +4,7 @@ import Input from '../inputs/Input.vue';
 import Button from '../CustomButton.vue';
 import * as yup from 'yup';
 import { useUserStore } from '@/stores/user';
-import type { InputCreateUser } from '@/services/users/types';
+import type { InputCreateUser } from '@/services/types';
 
 const userStore = useUserStore();
 
@@ -29,9 +29,9 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <div class="box login-form-wrapper">
+  <div class="box login-form-wrapper p-5">
     <h1 class="heading-m mt-0 mb-1">Create account</h1>
-    <h2 class="body-m mb-0">Let’s get you started sharing your links!</h2>
+    <h2 class="body-m mb-5">Let’s get you started sharing your links!</h2>
     <form @submit="onSubmit" action="/register" method="post" class="mt-5">
       <Input
         name="email"
@@ -57,10 +57,10 @@ const onSubmit = handleSubmit(async (values) => {
         label="Confirm password"
         icon="lock"
       />
-      <p class="body-s mt-0 mb-3">Password must contain at least 8 characters</p>
+      <p class="body-s my-3">Password must contain at least 8 characters</p>
       <Button label="Login" type="submit" />
     </form>
-    <p class="txt-center mb-0">
+    <p class="txt-center mb-0 mt-3">
       Already have an account? <RouterLink to="/login">Login</RouterLink>
     </p>
   </div>
