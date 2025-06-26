@@ -3,6 +3,9 @@
 dev:
 	make -j2 run-backend dev-frontend
 
+dev-docker:
+	make -j2 docker-build-backend dev-frontend
+
 build:
 	make build-backend
 	make build-frontend
@@ -27,3 +30,6 @@ lint:
 
 docker-build:
 	docker compose up
+
+docker-build-backend:
+	docker compose up backend
