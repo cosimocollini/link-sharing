@@ -5,3 +5,6 @@ RETURNING *;
 
 -- name: GetUserByEmail :one
 SELECT * FROM users WHERE email = ?;
+
+-- name: GetUserById :one
+SELECT * FROM users WHERE id = ?;

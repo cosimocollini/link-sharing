@@ -73,12 +73,18 @@ func ValidateJWT(tokenString, tokenSecret string) (string, error) {
 
 func SetCookie(c *gin.Context, name string, value string, days int) {
 	expiration := days * 24 * 60 * 60
-	cookie, err := c.Cookie("gin_cookie")
-
-	if err != nil {
-		cookie = "NotSet"
-		c.SetCookie(name, value, expiration, "/", "localhost", true, true)
-	}
-
-	fmt.Printf("Cookie value: %s \n", cookie)
+	c.SetCookie(
+		name,
+		value,
+		expiration,
+		"/",
+		"",
+		true,
+		true,
+	)
+	c.Writer.Header().Add("Set-Cookie",
+		fmt.Sprintf("%s=%s; Max-Age=%d; Path=/; Secure; HttpOnly; SameSite=Lax",
+			name, value, expiration,
+		),
+	)
 }

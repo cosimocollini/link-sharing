@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"embed"
 	"fmt"
 	"log"
 
@@ -11,7 +12,7 @@ import (
 
 	"github.com/pressly/goose/v3"
 
-	_ "github.com/tursodatabase/libsql-client-go/libsql"
+	_ "modernc.org/sqlite"
 )
 
 type apiConfig struct {
@@ -19,17 +20,20 @@ type apiConfig struct {
 	jwtSecret string
 }
 
+//go:embed sql/schema/*.sql
+var fs embed.FS
+
 func main() {
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	connString := getEnv("TURSO_DATABASE_URL") + "?authToken=" + getEnv("TURSO_AUTH_TOKEN")
+	connString := "file://" + getEnv("DB_FILE_PATH")
 
 	jwtSecret := getEnv("JWT_SECRET")
 
-	db, err := sql.Open("libsql", connString)
+	db, err := sql.Open("sqlite", connString)
 	if err != nil {
 		log.Fatal("failed to open db ")
 	}
@@ -43,7 +47,7 @@ func main() {
 	if err := goose.SetDialect("sqlite"); err != nil {
 		log.Fatal(err)
 	}
-
+	goose.SetBaseFS(fs)
 	if err := goose.Up(db, "sql/schema"); err != nil {
 		log.Fatal(err)
 	}
@@ -67,6 +71,7 @@ func main() {
 	})
 
 	r.POST("/register", apiCfg.handlerUsersCreate)
+	r.GET("/me", apiCfg.handlerUsersMe)
 
 	r.Run()
 }

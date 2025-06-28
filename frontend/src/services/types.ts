@@ -16,6 +16,11 @@ export type InputCreateUser = {
   password: string;
 };
 
+export type Credentials = {
+  email: string;
+  password: string;
+};
+
 export type InputUpdateSchool = {
   id: number;
   description: string;

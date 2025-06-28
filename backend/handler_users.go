@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/cosimocollini/link-sharing-app/auth"
@@ -11,6 +12,12 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
+
+type UserResponse struct {
+	ID        string    `json:"id"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at"`
+}
 
 func (cfg *apiConfig) handlerUsersCreate(c *gin.Context) {
 	type parameters struct {
@@ -23,14 +30,16 @@ func (cfg *apiConfig) handlerUsersCreate(c *gin.Context) {
 		return
 	}
 
-	if _, err := cfg.DB.GetUserByEmail(c, params.Email); err == nil {
-		c.JSON(http.StatusConflict, APIResponse[string]{Success: false, Content: "User already exist", Status: http.StatusConflict})
-		return
-	}
-
 	errors, err := validators.BaseValidator(params)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, errors)
+		return
+	}
+
+	email := strings.TrimSpace(strings.ToLower(params.Email))
+
+	if _, err := cfg.DB.GetUserByEmail(c.Request.Context(), email); err == nil {
+		c.JSON(http.StatusConflict, APIResponse[string]{Success: false, Content: "User already exist", Status: http.StatusConflict})
 		return
 	}
 
@@ -40,12 +49,14 @@ func (cfg *apiConfig) handlerUsersCreate(c *gin.Context) {
 		return
 	}
 
+	userID := uuid.NewString()
+	now := time.Now().UTC()
 	createdUser, err := cfg.DB.CreateUser(c.Request.Context(), database.CreateUserParams{
-		ID:        uuid.New().String(),
-		Email:     params.Email,
+		ID:        userID,
+		Email:     email,
 		Password:  hashedPassword,
-		CreatedAt: time.Now().UTC(),
-		UpdatedAt: time.Now().UTC(),
+		CreatedAt: now,
+		UpdatedAt: now,
 	})
 
 	if err != nil {
@@ -56,11 +67,49 @@ func (cfg *apiConfig) handlerUsersCreate(c *gin.Context) {
 
 	newJwt, err := auth.MakeJWT(createdUser.ID, cfg.jwtSecret, time.Hour*24)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, "Couldn't create access JWT")
+		log.Printf("Error generating JWT: %v", err)
+		c.JSON(http.StatusInternalServerError, APIResponse[string]{false, "Internal server error", http.StatusInternalServerError})
 		return
 	}
 
-	auth.SetCookie(c, "link-sharing", newJwt, 1)
+	auth.SetCookie(c, "link_sharing_token", newJwt, 1)
 
-	c.JSON(http.StatusOK, databaseUserToUser(true, http.StatusOK, createdUser))
+	resp := UserResponse{
+		ID:        createdUser.ID,
+		Email:     createdUser.Email,
+		CreatedAt: createdUser.CreatedAt,
+	}
+
+	c.JSON(http.StatusCreated, APIResponse[UserResponse]{true, resp, http.StatusCreated})
+}
+
+func (cfg *apiConfig) handlerUsersMe(c *gin.Context) {
+	tokenString, err := c.Cookie("link_sharing_token")
+	if err != nil {
+		log.Printf("Error getting cookie: %v", err)
+		c.JSON(http.StatusUnauthorized, APIResponse[string]{false, "Unauthorized", http.StatusUnauthorized})
+		return
+	}
+
+	userID, err := auth.ValidateJWT(tokenString, cfg.jwtSecret)
+	if err != nil {
+		log.Printf("Error getting user ID from cookie: %v", err)
+		c.JSON(http.StatusUnauthorized, APIResponse[string]{false, "Unauthorized", http.StatusUnauthorized})
+		return
+	}
+
+	user, err := cfg.DB.GetUserById(c.Request.Context(), userID)
+	if err != nil {
+		log.Printf("Error getting user by ID: %v", err)
+		c.JSON(http.StatusInternalServerError, APIResponse[string]{false, "Internal server error", http.StatusInternalServerError})
+		return
+	}
+
+	resp := UserResponse{
+		ID:        user.ID,
+		Email:     user.Email,
+		CreatedAt: user.CreatedAt,
+	}
+
+	c.JSON(http.StatusOK, APIResponse[UserResponse]{true, resp, http.StatusOK})
 }
