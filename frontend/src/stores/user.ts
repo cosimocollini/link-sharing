@@ -83,6 +83,7 @@ export const useUserStore = defineStore('user', () => {
     logout,
     dispatchRegisterUser,
     dispatchLogoutUser,
+    dispatchFetchCurrentUser,
     dispatchLoginUser,
     init
   };
