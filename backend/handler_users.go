@@ -113,3 +113,59 @@ func (cfg *apiConfig) handlerUsersMe(c *gin.Context) {
 
 	c.JSON(http.StatusOK, APIResponse[UserResponse]{true, resp, http.StatusOK})
 }
+
+func (cfg *apiConfig) handlerUsersLogout(c *gin.Context) {
+	auth.SetCookie(c, "link_sharing_token", "", -1)
+
+	c.JSON(http.StatusNoContent, APIResponse[string]{true, "Logged out successfully", http.StatusNoContent})
+}
+
+func (cfg *apiConfig) handleUsersLogin(c *gin.Context) {
+	type parameters struct {
+		Email    string `json:"email" validate:"required,email"`
+		Password string `json:"password" validate:"required,min=5"`
+	}
+	params := parameters{}
+	if err := c.ShouldBindJSON(&params); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	errors, err := validators.BaseValidator(params)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errors)
+		return
+	}
+
+	email := strings.TrimSpace(strings.ToLower(params.Email))
+
+	user, err := cfg.DB.GetUserByEmail(c.Request.Context(), email)
+	if err != nil {
+		time.Sleep(100 * time.Millisecond)
+		c.JSON(http.StatusUnauthorized, APIResponse[string]{false, "Invalid credentials", http.StatusUnauthorized})
+		return
+	}
+
+	if err := auth.CheckPasswordHash(params.Password, user.Password); err != nil {
+		time.Sleep(100 * time.Millisecond)
+		c.JSON(http.StatusUnauthorized, APIResponse[string]{false, "Invalid credentials", http.StatusUnauthorized})
+		return
+	}
+
+	newJwt, err := auth.MakeJWT(user.ID, cfg.jwtSecret, time.Hour*24)
+	if err != nil {
+		log.Printf("Error generating JWT: %v", err)
+		c.JSON(http.StatusInternalServerError, APIResponse[string]{false, "Internal server error", http.StatusInternalServerError})
+		return
+	}
+
+	auth.SetCookie(c, "link_sharing_token", newJwt, 1)
+
+	resp := UserResponse{
+		ID:        user.ID,
+		Email:     user.Email,
+		CreatedAt: user.CreatedAt,
+	}
+
+	c.JSON(http.StatusOK, APIResponse[UserResponse]{true, resp, http.StatusOK})
+}

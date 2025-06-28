@@ -2,7 +2,7 @@
   <div class="box login-form-wrapper">
     <h1 class="heading-m mt-0 mb-1">Login</h1>
     <h2 class="body-m mb-0">Add your details below to get back into the app</h2>
-    <form @submit="submitForm" action="/api/login" method="post" class="mt-5">
+    <form @submit.prevent="submitForm" novalidate class="mt-5">
       <Input
         name="email"
         type="email"

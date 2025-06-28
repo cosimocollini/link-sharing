@@ -21,8 +21,6 @@ export const useUserStore = defineStore('user', () => {
     try {
       const { status, data } = await API.createUser(input);
       if (status === 201) {
-        // backend imposta cookie HttpOnly
-        // Fetchamo subito il profilo utente
         await dispatchFetchCurrentUser();
         return { success: true, content: null };
       }
@@ -51,7 +49,6 @@ export const useUserStore = defineStore('user', () => {
     try {
       await API.logout();
     } catch {
-      // ignora errori, tanto puliamo lo stato
     } finally {
       setUser(null);
     }
@@ -72,7 +69,6 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  // Inizializzazione del store: chiama “me” al caricamento dell’app
   async function init() {
     await dispatchFetchCurrentUser();
   }

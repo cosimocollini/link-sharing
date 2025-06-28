@@ -32,7 +32,7 @@ const onSubmit = handleSubmit(async (values) => {
   <div class="box login-form-wrapper p-5">
     <h1 class="heading-m mt-0 mb-1">Create account</h1>
     <h2 class="body-m mb-5">Let’s get you started sharing your links!</h2>
-    <form @submit="onSubmit" action="/register" method="post" class="mt-5">
+    <form @submit.prevent="onSubmit" novalidate class="mt-5">
       <Input
         name="email"
         type="email"
