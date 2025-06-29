@@ -17,10 +17,8 @@ authAPI.interceptors.response.use(
   (res) => res,
   async (err) => {
     if (err.response?.status === 401) {
-      // 1. Se hai un refresh endpoint, prova a rinfrescare qui
-      // 2. Altrimenti, pulisci lo store e reindirizza
       const userStore = useUserStore();
-      await userStore.dispatchLogoutUser();
+      // await userStore.dispatchLogoutUser();
       router.push('/login');
     }
     return Promise.reject(err);
@@ -32,7 +30,7 @@ async function getUser() {
 }
 
 async function createUser(input: InputCreateUser) {
-  return await authAPI.post<APIResponse<User>>('register', input, { headers: {} });
+  return await publicAPI.post<APIResponse<User>>('register', input, { headers: {} });
 }
 
 async function logout() {

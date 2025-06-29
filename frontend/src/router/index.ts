@@ -39,15 +39,24 @@ const router = createRouter({
   ]
 });
 
-router.beforeEach(async (to, from) => {
-  const userStore = useUserStore();
-  const isAuth = userStore.isAuthenticated;
+let initialized = false;
 
-  if ((to.path === '/login' || to.path === '/register') && userStore.isAuthenticated) {
-    return { name: 'dashboard' };
+router.beforeEach(async (to, from, next) => {
+  const userStore = useUserStore();
+
+  if (!initialized) {
+    await userStore.dispatchFetchCurrentUser();
+    initialized = true;
   }
 
-  if (to.meta.requiresAuth && !userStore.isAuthenticated) return { name: 'login' };
+  const isAuth = userStore.isAuthenticated;
+  if ((to.path === '/login' || to.path === '/register') && isAuth) {
+    return next({ name: 'dashboard' });
+  }
+
+  if (to.meta.requiresAuth && !isAuth) return next({ name: 'login' });
+
+  next();
 });
 
 export default router;

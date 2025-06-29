@@ -72,7 +72,7 @@ func main() {
 
 	r.POST("/register", apiCfg.handlerUsersCreate)
 	r.GET("/me", apiCfg.handlerUsersMe)
-	r.GET("/login", apiCfg.handlerUsersMe)
+	r.POST("/login", apiCfg.handleUsersLogin)
 
 	r.POST("/logout", apiCfg.handlerUsersLogout)
 

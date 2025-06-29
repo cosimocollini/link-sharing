@@ -31,12 +31,14 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  async function dispatchLoginUser(creds: Credentials): Promise<APIResponse<null>> {
+  async function dispatchLoginUser(creds: Credentials): Promise<APIResponse<User | null>> {
     try {
-      const { status } = await API.login(creds);
+      const { status, data } = await API.login(creds);
+      console.log('Login response:', { status, data });
       if (status === 200) {
-        await dispatchFetchCurrentUser();
-        return { success: true, content: null };
+        // await dispatchFetchCurrentUser();
+        setUser(data.content);
+        return { success: true, content: data.content };
       }
       return { success: false, content: null, status };
     } catch (err) {
