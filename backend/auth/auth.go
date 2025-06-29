@@ -7,13 +7,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type TokenType string
 
 const (
-	TokenTypeAccess TokenType = "link-sharing"
+	TokenTypeAccess TokenType = "link_sharing_token"
 )
 
 func HashPassword(password string) (string, error) {
@@ -36,11 +37,14 @@ func MakeJWT(
 	signingKey := []byte(tokenSecret)
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
+		ID:        uuid.NewString(),
 		Issuer:    string(TokenTypeAccess),
-		IssuedAt:  jwt.NewNumericDate(time.Now().UTC()),
-		ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(expiresIn)),
 		Subject:   userID,
+		IssuedAt:  jwt.NewNumericDate(time.Now().UTC()),
+		NotBefore: jwt.NewNumericDate(time.Now().UTC()),
+		ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(expiresIn)),
 	})
+
 	return token.SignedString(signingKey)
 }
 
@@ -73,15 +77,6 @@ func ValidateJWT(tokenString, tokenSecret string) (string, error) {
 
 func SetCookie(c *gin.Context, name string, value string, days int) {
 	expiration := days * 24 * 60 * 60
-	c.SetCookie(
-		name,
-		value,
-		expiration,
-		"/",
-		"",
-		true,
-		true,
-	)
 	c.Writer.Header().Add("Set-Cookie",
 		fmt.Sprintf("%s=%s; Max-Age=%d; Path=/; Secure; HttpOnly; SameSite=Lax",
 			name, value, expiration,
