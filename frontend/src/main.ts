@@ -14,7 +14,7 @@ app.use(createPinia());
 app.use(router);
 
 const userStore = useUserStore();
-userStore.init().then(() => {
-  app.mount('#app');
-});
-// app.mount('#app');
+// userStore.init().then(() => {
+//   app.mount('#app');
+// });
+app.mount('#app');

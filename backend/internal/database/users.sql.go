@@ -14,7 +14,7 @@ import (
 const createUser = `-- name: CreateUser :one
 INSERT INTO users (id, email, password, first_name, last_name, created_at, updated_at)
 VALUES (?, ?, ?, ?, ?, ?, ?)
-RETURNING id, email, password, first_name, last_name, created_at, updated_at
+RETURNING id, email, public_email, password, first_name, last_name, created_at, updated_at
 `
 
 type CreateUserParams struct {
@@ -41,6 +41,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
+		&i.PublicEmail,
 		&i.Password,
 		&i.FirstName,
 		&i.LastName,
@@ -51,7 +52,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, email, password, first_name, last_name, created_at, updated_at FROM users WHERE email = ?
+SELECT id, email, public_email, password, first_name, last_name, created_at, updated_at FROM users WHERE email = ?
 `
 
 func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error) {
@@ -60,6 +61,7 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
+		&i.PublicEmail,
 		&i.Password,
 		&i.FirstName,
 		&i.LastName,
@@ -70,7 +72,7 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 }
 
 const getUserById = `-- name: GetUserById :one
-SELECT id, email, password, first_name, last_name, created_at, updated_at FROM users WHERE id = ?
+SELECT id, email, public_email, password, first_name, last_name, created_at, updated_at FROM users WHERE id = ?
 `
 
 func (q *Queries) GetUserById(ctx context.Context, id string) (User, error) {
@@ -79,6 +81,44 @@ func (q *Queries) GetUserById(ctx context.Context, id string) (User, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
+		&i.PublicEmail,
+		&i.Password,
+		&i.FirstName,
+		&i.LastName,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const updateUserPersonalInfo = `-- name: UpdateUserPersonalInfo :one
+UPDATE users
+SET first_name = ?, last_name = ?, public_email = ?, updated_at = ?
+WHERE id = ?
+RETURNING id, email, public_email, password, first_name, last_name, created_at, updated_at
+`
+
+type UpdateUserPersonalInfoParams struct {
+	FirstName   sql.NullString
+	LastName    sql.NullString
+	PublicEmail sql.NullString
+	UpdatedAt   time.Time
+	ID          string
+}
+
+func (q *Queries) UpdateUserPersonalInfo(ctx context.Context, arg UpdateUserPersonalInfoParams) (User, error) {
+	row := q.db.QueryRowContext(ctx, updateUserPersonalInfo,
+		arg.FirstName,
+		arg.LastName,
+		arg.PublicEmail,
+		arg.UpdatedAt,
+		arg.ID,
+	)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.PublicEmail,
 		&i.Password,
 		&i.FirstName,
 		&i.LastName,

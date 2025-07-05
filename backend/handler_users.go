@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 	"strings"
@@ -17,6 +18,12 @@ type UserResponse struct {
 	ID        string    `json:"id"`
 	Email     string    `json:"email"`
 	CreatedAt time.Time `json:"created_at"`
+}
+type UserDetails struct {
+	ID          string `json:"id"`
+	PublicEmail string `json:"public_email"`
+	FirstName   string `json:"first_name"`
+	LastName    string `json:"last_name"`
 }
 
 func (cfg *apiConfig) handlerUsersCreate(c *gin.Context) {
@@ -105,13 +112,14 @@ func (cfg *apiConfig) handlerUsersMe(c *gin.Context) {
 		return
 	}
 
-	resp := UserResponse{
-		ID:        user.ID,
-		Email:     user.Email,
-		CreatedAt: user.CreatedAt,
+	resp := UserDetails{
+		ID:          user.ID,
+		PublicEmail: user.PublicEmail.String,
+		FirstName:   user.FirstName.String,
+		LastName:    user.LastName.String,
 	}
 
-	c.JSON(http.StatusOK, APIResponse[UserResponse]{true, resp, http.StatusOK})
+	c.JSON(http.StatusOK, APIResponse[UserDetails]{true, resp, http.StatusOK})
 }
 
 func (cfg *apiConfig) handlerUsersLogout(c *gin.Context) {
@@ -161,11 +169,69 @@ func (cfg *apiConfig) handleUsersLogin(c *gin.Context) {
 
 	auth.SetCookie(c, "link_sharing_token", newJwt, 1)
 
-	resp := UserResponse{
-		ID:        user.ID,
-		Email:     user.Email,
-		CreatedAt: user.CreatedAt,
+	resp := UserDetails{
+		ID:          user.ID,
+		PublicEmail: user.PublicEmail.String,
+		FirstName:   user.FirstName.String,
+		LastName:    user.LastName.String,
 	}
 
-	c.JSON(http.StatusOK, APIResponse[UserResponse]{true, resp, http.StatusOK})
+	c.JSON(http.StatusOK, resp)
+}
+
+func (cfg *apiConfig) handleUsersUpdateDetails(c *gin.Context) {
+	type parameters struct {
+		PublicEmail string `json:"email" validate:"omitempty,email"`
+		FirstName   string `json:"firstName" validate:"required,min=5"`
+		LastName    string `json:"lastName" validate:"required,min=5"`
+	}
+	params := parameters{}
+	if err := c.ShouldBindJSON(&params); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	errors, err := validators.BaseValidator(params)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errors)
+		return
+	}
+
+	email := strings.TrimSpace(strings.ToLower(params.PublicEmail))
+
+	tokenString, err := c.Cookie("link_sharing_token")
+	if err != nil {
+		log.Printf("Error getting cookie: %v", err)
+		c.JSON(http.StatusUnauthorized, APIResponse[string]{false, "Unauthorized", http.StatusUnauthorized})
+		return
+	}
+
+	userID, err := auth.ValidateJWT(tokenString, cfg.jwtSecret)
+	if err != nil {
+		log.Printf("Error getting user ID from cookie: %v", err)
+		c.JSON(http.StatusUnauthorized, APIResponse[string]{false, "Unauthorized", http.StatusUnauthorized})
+		return
+	}
+
+	updatedUser, err := cfg.DB.UpdateUserPersonalInfo(c.Request.Context(), database.UpdateUserPersonalInfoParams{
+		ID:          userID,
+		PublicEmail: sql.NullString{String: email, Valid: email != ""},
+		FirstName:   sql.NullString{String: params.FirstName, Valid: params.FirstName != ""},
+		LastName:    sql.NullString{String: params.LastName, Valid: params.LastName != ""},
+	})
+
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusInternalServerError, "Couldn't update user")
+		return
+	}
+
+	resp := UserDetails{
+		ID:          updatedUser.ID,
+		PublicEmail: updatedUser.PublicEmail.String,
+		FirstName:   updatedUser.FirstName.String,
+		LastName:    updatedUser.LastName.String,
+	}
+
+	c.JSON(http.StatusOK, APIResponse[UserDetails]{true, resp, http.StatusOK})
 }

@@ -10,8 +10,10 @@ import { useForm } from 'vee-validate';
 import { userDetailsSchema } from '@/services/validations';
 
 import type { UserDetails } from '@/services/types';
+import { useUserStore } from '@/stores/user';
 
 const formStore = useFormStore();
+const userStore = useUserStore();
 
 const startNotification = inject('notification') as () => void;
 
@@ -23,8 +25,12 @@ const { handleSubmit, isSubmitting } = useForm<UserDetails>({
 
 const onSubmit = handleSubmit(async (values) => {
   console.log('User details updated:', values);
-  // const { success, status } = await for.dispatchRegisterUser(values);
-  startNotification();
+  const res = await userStore.dispatchPersonalDetails(values);
+  if (res.success) {
+    startNotification();
+  } else {
+    console.error('Failed to update user details:', res.status);
+  }
 });
 </script>
 

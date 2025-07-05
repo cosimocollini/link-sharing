@@ -1,20 +1,38 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
-import type { APIResponse, InputCreateUser, User, Credentials } from '@/services/types';
+import type { APIResponse, InputCreateUser, Credentials, UserDetails } from '@/services/types';
 import API from '@/services/api';
 import type { AxiosError } from 'axios';
+import { mapUserResponseToDomain } from '@/services/userMapper';
+import router from '@/router';
 
 export const useUserStore = defineStore('user', () => {
   const loading = ref<boolean>(false);
-  const user = ref<User | null>(null);
-  const isAuthenticated = computed(() => user.value !== null);
+  const user = ref<UserDetails>({
+    isAuthenticated: false,
+    firstName: '',
+    lastName: '',
+    email: '',
+    profilePicture: undefined
+  });
+  const isAuthenticated = computed(() => user.value.isAuthenticated);
 
-  const logout = () => {
-    user.value = null;
+  const setUserDetails = (data: UserDetails) => {
+    user.value = data;
   };
 
-  const setUser = (response: User | null) => {
-    user.value = response;
+  const resetUser = () => {
+    user.value = {
+      isAuthenticated: false,
+      firstName: '',
+      lastName: '',
+      email: '',
+      profilePicture: undefined
+    };
+  };
+
+  const logout = () => {
+    resetUser();
   };
 
   async function dispatchRegisterUser(input: InputCreateUser): Promise<APIResponse<null>> {
@@ -24,26 +42,38 @@ export const useUserStore = defineStore('user', () => {
         await dispatchFetchCurrentUser();
         return { success: true, content: null };
       }
-      return { success: false, content: null, status };
+      return { success: false, content: null };
     } catch (err) {
-      const _error = err as AxiosError<string>;
-      return { success: false, status: _error.response?.status, content: null };
+      return { success: false, content: null };
     }
   }
 
-  async function dispatchLoginUser(creds: Credentials): Promise<APIResponse<User | null>> {
+  async function dispatchPersonalDetails(
+    newData: UserDetails
+  ): Promise<APIResponse<UserDetails | null>> {
+    try {
+      const { status, data } = await API.updateUser(newData);
+      if (status === 200) {
+        return { success: true, content: data.content };
+      }
+      return { success: false, content: null };
+    } catch (err) {
+      const _error = err as AxiosError<string>;
+      return { success: false, content: null };
+    }
+  }
+
+  async function dispatchLoginUser(creds: Credentials): Promise<void> {
     try {
       const { status, data } = await API.login(creds);
       console.log('Login response:', { status, data });
-      if (status === 200) {
-        // await dispatchFetchCurrentUser();
-        setUser(data.content);
-        return { success: true, content: data.content };
+      console.log('Login response:', data.content.firstName);
+      if (status === 200 && data) {
+        setUserDetails(mapUserResponseToDomain(data.content));
+        router.replace({ name: 'dashboard' });
       }
-      return { success: false, content: null, status };
     } catch (err) {
       const _error = err as AxiosError<string>;
-      return { success: false, status: _error.response?.status, content: null };
     }
   }
 
@@ -52,7 +82,7 @@ export const useUserStore = defineStore('user', () => {
       await API.logout();
     } catch {
     } finally {
-      setUser(null);
+      resetUser();
     }
   }
 
@@ -60,12 +90,12 @@ export const useUserStore = defineStore('user', () => {
     try {
       const { status, data } = await API.me();
       if (status === 200) {
-        setUser(data.content);
+        setUserDetails(mapUserResponseToDomain(data.content));
       } else {
-        setUser(null);
+        resetUser();
       }
     } catch {
-      setUser(null);
+      resetUser();
     } finally {
       loading.value = false;
     }
@@ -83,6 +113,7 @@ export const useUserStore = defineStore('user', () => {
     dispatchLogoutUser,
     dispatchFetchCurrentUser,
     dispatchLoginUser,
+    dispatchPersonalDetails,
     init
   };
 });

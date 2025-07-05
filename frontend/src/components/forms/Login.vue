@@ -15,17 +15,14 @@ interface LoginForm {
 const { handleSubmit, submitForm, isSubmitting } = useForm<LoginForm>();
 
 const onSubmit = handleSubmit(async (values) => {
-  const { success } = await userStore.dispatchLoginUser(values);
-  if (success) {
-    router.push({ name: 'dashboard' });
-  }
+  await userStore.dispatchLoginUser(values);
 });
 </script>
 
 <template>
-  <div class="box login-form-wrapper">
+  <div class="box login-form-wrapper p-5">
     <h1 class="heading-m mt-0 mb-1">Login</h1>
-    <h2 class="body-m mb-0">Add your details below to get back into the app</h2>
+    <h2 class="body-m mb-5">Add your details below to get back into the app</h2>
     <form @submit.prevent="onSubmit" novalidate class="mt-5">
       <Input
         name="email"
@@ -43,9 +40,9 @@ const onSubmit = handleSubmit(async (values) => {
         label="Password"
         icon="lock"
       />
-      <Button label="Login" type="submit" :disable="isSubmitting" />
+      <Button label="Login" type="submit" :disable="isSubmitting" class="mt-3" />
     </form>
-    <p class="txt-center mb-0">
+    <p class="txt-center mb-0 mt-3">
       Don't have an account? <RouterLink to="/register">Create account</RouterLink>
     </p>
   </div>

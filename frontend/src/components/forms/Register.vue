@@ -58,7 +58,7 @@ const onSubmit = handleSubmit(async (values) => {
         icon="lock"
       />
       <p class="body-s my-3">Password must contain at least 8 characters</p>
-      <Button label="Login" type="submit" />
+      <Button label="Create new account" type="submit" />
     </form>
     <p class="txt-center mb-0 mt-3">
       Already have an account? <RouterLink to="/login">Login</RouterLink>

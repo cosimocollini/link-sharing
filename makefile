@@ -32,4 +32,7 @@ docker-build:
 	docker compose up
 
 docker-build-backend:
-	docker compose up backend
+	docker compose up backend -d
+
+sqlc:
+	cd backend && sqlc generate

@@ -1,6 +1,13 @@
 import axios from 'axios';
 
-import type { APIResponse, User, InputCreateUser, Credentials } from './types';
+import type {
+  APIResponse,
+  User,
+  InputCreateUser,
+  Credentials,
+  UserDetails,
+  UserDetailsResponse
+} from './types';
 import { useUserStore } from '@/stores/user';
 import router from '@/router';
 
@@ -18,7 +25,7 @@ authAPI.interceptors.response.use(
   async (err) => {
     if (err.response?.status === 401) {
       const userStore = useUserStore();
-      // await userStore.dispatchLogoutUser();
+      await userStore.dispatchLogoutUser();
       router.push('/login');
     }
     return Promise.reject(err);
@@ -38,11 +45,15 @@ async function logout() {
 }
 
 async function login(creds: Credentials) {
-  return await authAPI.post<APIResponse<null>>('login', creds, { headers: {} });
+  return await authAPI.post<APIResponse<UserDetailsResponse>>('login', creds, { headers: {} });
 }
 
 async function me() {
-  return await authAPI.get<APIResponse<User>>('me', { headers: {} });
+  return await authAPI.get<APIResponse<UserDetailsResponse>>('me', { headers: {} });
 }
 
-export default { getUser, createUser, logout, login, me };
+async function updateUser(input: UserDetails) {
+  return await authAPI.put<APIResponse<UserDetails>>('update-user', input, { headers: {} });
+}
+
+export default { getUser, createUser, logout, login, me, updateUser };

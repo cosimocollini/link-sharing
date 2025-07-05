@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - ./backend:/app         # codice Go live‑reload
-      - sqlite-data:/data      # DB persistente in locale
+      - ./backend/data:/data      # DB persistente in locale
     ports:
       - "8080:8080"
 

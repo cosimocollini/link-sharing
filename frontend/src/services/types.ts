@@ -1,7 +1,6 @@
 export type APIResponse<T> = {
   success: boolean;
   content: T;
-  status?: number;
 };
 
 export type User = {
@@ -32,8 +31,16 @@ export interface Link {
 }
 
 export interface UserDetails {
+  isAuthenticated: boolean;
   firstName: string;
   lastName: string;
   email?: string;
+  profilePicture?: File | undefined;
+}
+export interface UserDetailsResponse {
+  ID: string;
+  firstName: string;
+  lastName: string;
+  publicEmail?: string;
   profilePicture?: File | undefined;
 }

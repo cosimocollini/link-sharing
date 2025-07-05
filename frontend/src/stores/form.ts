@@ -2,7 +2,7 @@ import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 
 import type { Link, UserDetails } from '@/services/types';
-import type { User } from '@/services/users/types';
+import type { User } from '@/services/types';
 
 export const useFormStore = defineStore('form', () => {
   const links = ref<Link[]>([]);
@@ -13,6 +13,13 @@ export const useFormStore = defineStore('form', () => {
     email: '',
     profilePicture: undefined
   });
+
+  const setUserDetails = (details: UserDetails) => {
+    userDetails.value.firstName = details.firstName;
+    userDetails.value.lastName = details.lastName;
+    userDetails.value.email = details.email;
+    userDetails.value.profilePicture = details.profilePicture;
+  };
 
   const addLink = () => {
     const newLink: Link = {
@@ -37,5 +44,5 @@ export const useFormStore = defineStore('form', () => {
     return links.value;
   });
 
-  return { links, userDetails, addLink, removeLink, updateLink, getLinks };
+  return { links, userDetails, addLink, removeLink, updateLink, getLinks, setUserDetails };
 });

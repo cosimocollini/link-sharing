@@ -9,12 +9,30 @@ import (
 	"time"
 )
 
-type User struct {
-	ID        string
-	Email     string
-	Password  string
-	FirstName sql.NullString
-	LastName  sql.NullString
-	CreatedAt time.Time
+type PublicProfile struct {
+	UserID    string
+	Slug      string
+	IsActive  bool
 	UpdatedAt time.Time
+}
+
+type SocialLink struct {
+	ID           int64
+	UserID       string
+	Platform     string
+	Url          string
+	DisplayOrder sql.NullInt64
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+}
+
+type User struct {
+	ID          string
+	Email       string
+	PublicEmail sql.NullString
+	Password    string
+	FirstName   sql.NullString
+	LastName    sql.NullString
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
