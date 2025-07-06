@@ -1,12 +1,20 @@
-import { ref, computed } from 'vue';
+import { ref, computed, inject } from 'vue';
 import { defineStore } from 'pinia';
-import type { APIResponse, InputCreateUser, Credentials, UserDetails } from '@/services/types';
+import type {
+  APIResponse,
+  InputCreateUser,
+  Credentials,
+  UserDetails,
+  UserDetailsResponse,
+  Link
+} from '@/services/types';
 import API from '@/services/api';
 import type { AxiosError } from 'axios';
 import { mapUserResponseToDomain } from '@/services/userMapper';
 import router from '@/router';
 
 export const useUserStore = defineStore('user', () => {
+  const links = ref<Link[]>([]);
   const loading = ref<boolean>(false);
   const user = ref<UserDetails>({
     isAuthenticated: false,
@@ -17,9 +25,34 @@ export const useUserStore = defineStore('user', () => {
   });
   const isAuthenticated = computed(() => user.value.isAuthenticated);
 
+  const startNotification = inject('notification') as () => void;
+
   const setUserDetails = (data: UserDetails) => {
     user.value = data;
   };
+
+  const addLink = () => {
+    const newLink: Link = {
+      id: crypto.randomUUID(),
+      name: '',
+      url: ''
+    };
+    links.value.push(newLink);
+  };
+  const removeLink = (id: string) => {
+    links.value = links.value.filter((link) => link.id !== id);
+  };
+  const updateLink = (newLink: Link) => {
+    const link = links.value.find((link) => newLink.id === link.id);
+    if (link) {
+      link.name = newLink.name;
+      link.url = newLink.url;
+    }
+  };
+
+  const getLinks = computed(() => {
+    return links.value;
+  });
 
   const resetUser = () => {
     user.value = {
@@ -54,7 +87,9 @@ export const useUserStore = defineStore('user', () => {
     try {
       const { status, data } = await API.updateUser(newData);
       if (status === 200) {
-        return { success: true, content: data.content };
+        startNotification();
+        setUserDetails(mapUserResponseToDomain(data.content));
+        return { success: true, content: mapUserResponseToDomain(data.content) };
       }
       return { success: false, content: null };
     } catch (err) {
@@ -90,9 +125,9 @@ export const useUserStore = defineStore('user', () => {
     try {
       const { status, data } = await API.me();
       if (status === 200) {
+        console.log('ME:', data, user.value);
         setUserDetails(mapUserResponseToDomain(data.content));
-      } else {
-        resetUser();
+        console.log('ME:', data, user.value);
       }
     } catch {
       resetUser();
@@ -114,6 +149,11 @@ export const useUserStore = defineStore('user', () => {
     dispatchFetchCurrentUser,
     dispatchLoginUser,
     dispatchPersonalDetails,
-    init
+    init,
+    addLink,
+    removeLink,
+    updateLink,
+    getLinks,
+    links
   };
 });

@@ -3,7 +3,6 @@ import InputFile from '@/components/inputs/InputFile.vue';
 import Input from '@/components/inputs/Input.vue';
 import Button from '@/components/CustomButton.vue';
 
-import { useFormStore } from '@/stores/form';
 import { toRefs, inject } from 'vue';
 
 import { useForm } from 'vee-validate';
@@ -12,12 +11,11 @@ import { userDetailsSchema } from '@/services/validations';
 import type { UserDetails } from '@/services/types';
 import { useUserStore } from '@/stores/user';
 
-const formStore = useFormStore();
 const userStore = useUserStore();
 
 const startNotification = inject('notification') as () => void;
 
-const { firstName, lastName, email, profilePicture } = toRefs(formStore.userDetails);
+const { firstName, lastName, email, profilePicture } = toRefs(userStore.user);
 
 const { handleSubmit, isSubmitting } = useForm<UserDetails>({
   validationSchema: userDetailsSchema
@@ -26,11 +24,11 @@ const { handleSubmit, isSubmitting } = useForm<UserDetails>({
 const onSubmit = handleSubmit(async (values) => {
   console.log('User details updated:', values);
   const res = await userStore.dispatchPersonalDetails(values);
-  if (res.success) {
-    startNotification();
-  } else {
-    console.error('Failed to update user details:', res.status);
-  }
+  // if (res.success) {
+  //   startNotification();
+  // } else {
+  //   console.error('Failed to update user details:', res.status);
+  // }
 });
 </script>
 

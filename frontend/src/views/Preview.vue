@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useFormStore } from '@/stores/form';
+import { useUserStore } from '@/stores/user';
 import { LINKS } from '@/constants';
 
-const store = useFormStore();
+const userStore = useUserStore();
 
 const userImage = computed(() => {
-  return store.userDetails.profilePicture
-    ? URL.createObjectURL(store.userDetails.profilePicture)
-    : false;
+  return userStore.user.profilePicture ? URL.createObjectURL(userStore.user.profilePicture) : false;
 });
 </script>
 
@@ -33,18 +31,18 @@ const userImage = computed(() => {
       ></div>
       <div
         class="name px-4"
-        :class="{ empty: !store.userDetails.firstName || !store.userDetails.lastName }"
+        :class="{ empty: !userStore.user.firstName || !userStore.user.lastName }"
       >
-        <span v-if="store.userDetails.firstName && store.userDetails.lastName"
-          >{{ store.userDetails.firstName }} {{ store.userDetails.lastName }}</span
+        <span v-if="userStore.user.firstName && userStore.user.lastName"
+          >{{ userStore.user.firstName }} {{ userStore.user.lastName }}</span
         >
       </div>
-      <div class="email px-4" :class="{ empty: !store.userDetails.email }">
-        <span v-if="store.userDetails.email">{{ store.userDetails.email }}</span>
+      <div class="email px-4" :class="{ empty: !userStore.user.email }">
+        <span v-if="userStore.user.email">{{ userStore.user.email }}</span>
       </div>
       <div
-        v-if="store.links.length > 0"
-        v-for="(link, i) in store.links"
+        v-if="userStore.getLinks.length > 0"
+        v-for="(link, i) in userStore.getLinks"
         class="link body-s px-2"
         :class="{ empty: !link.name || !link.url }"
         :style="{ backgroundColor: LINKS[link.name as keyof typeof LINKS]?.color }"
@@ -57,7 +55,7 @@ const userImage = computed(() => {
         <SvgIcon v-if="link.name" name="arrow-right" color="#FFF" />
       </div>
       <template v-for="(n, i) in 5" :key="i">
-        <div v-if="!store.links[i]" class="link empty"></div>
+        <div v-if="!userStore.getLinks[i]" class="link empty"></div>
       </template>
     </div>
   </div>

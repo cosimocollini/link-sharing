@@ -53,7 +53,7 @@ async function me() {
 }
 
 async function updateUser(input: UserDetails) {
-  return await authAPI.put<APIResponse<UserDetails>>('update-user', input, { headers: {} });
+  return await authAPI.put<APIResponse<UserDetailsResponse>>('update-user', input, { headers: {} });
 }
 
 export default { getUser, createUser, logout, login, me, updateUser };

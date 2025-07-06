@@ -3,31 +3,31 @@ import Button from '@/components/CustomButton.vue';
 import LinkConstructor from '@/components/forms/LinkConstructor.vue';
 import DragDropList from '@/components/DragDropList.vue';
 import { computed, inject } from 'vue';
-import { useFormStore } from '@/stores/form';
+import { useUserStore } from '@/stores/user';
 
 import { useForm } from 'vee-validate';
 import { linkListSchema } from '@/services/validations';
 
 import type { Link } from '@/services/types';
 
-const formStore = useFormStore();
+const store = useUserStore();
 
 const startNotification = inject('notification') as () => void;
 
-const links = computed(() => formStore.getLinks);
+const links = computed(() => store.getLinks);
 
 const { handleSubmit, isSubmitting, errors } = useForm<Link[]>({
   validationSchema: linkListSchema,
-  initialValues: formStore.getLinks
+  initialValues: store.getLinks
 });
 
 const updateItems = (newItems: Link[]) => {
-  formStore.links = newItems;
+  store.links = newItems;
   console.log('Lista aggiornata:', newItems);
 };
 
 const updateLink = (index: number, updated: Link) => {
-  formStore.updateLink(updated);
+  store.updateLink(updated);
   console.log('Link aggiornato:', updated);
 };
 
@@ -38,7 +38,7 @@ const onSubmit = handleSubmit(async (values: any) => {
 
 function addLink() {
   // push({ name: '', url: '' });
-  formStore.addLink();
+  store.addLink();
 }
 </script>
 

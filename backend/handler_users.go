@@ -21,9 +21,9 @@ type UserResponse struct {
 }
 type UserDetails struct {
 	ID          string `json:"id"`
-	PublicEmail string `json:"public_email"`
-	FirstName   string `json:"first_name"`
-	LastName    string `json:"last_name"`
+	PublicEmail string `json:"publicEmail"`
+	FirstName   string `json:"firstName"`
+	LastName    string `json:"lastName"`
 }
 
 func (cfg *apiConfig) handlerUsersCreate(c *gin.Context) {
