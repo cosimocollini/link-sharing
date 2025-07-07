@@ -127,6 +127,7 @@ const userImage = computed(() => {
       display: block;
       margin: 12px auto 56px auto;
       text-align: center;
+      white-space: wrap;
 
       &.empty {
         width: 72px;

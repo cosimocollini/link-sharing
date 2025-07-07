@@ -3,20 +3,13 @@ import { toRef } from 'vue';
 import { useField } from 'vee-validate';
 import SvgIcon from '@/components/SvgIcon.vue';
 
-const [model, modifiers] = defineModel<string | undefined>({
-  type: String,
-  default: undefined,
-  set(value: string | undefined) {
-    if (modifiers.lowercase) {
-      return value?.toLowerCase();
-    }
-    return value;
-  }
-});
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: string): void;
+}>();
 
 const props = withDefaults(
   defineProps<{
-    //modelValue: string;
+    modelValue?: string;
     label?: string;
     type: string;
     inputId: string;
@@ -34,8 +27,15 @@ const props = withDefaults(
 const name = toRef(props, 'name');
 
 const { value, errorMessage, handleBlur, handleChange, meta } = useField(name, props.rules, {
-  initialValue: props.value
+  initialValue: props.modelValue
 });
+
+const handleInput = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const newValue = props.type === 'email' ? target.value.toLowerCase() : target.value;
+  emit('update:modelValue', newValue);
+  handleChange(newValue);
+};
 </script>
 
 <template>
@@ -44,13 +44,13 @@ const { value, errorMessage, handleBlur, handleChange, meta } = useField(name, p
     <div class="field__input-wrapper">
       <SvgIcon v-if="props.icon" :name="props.icon" />
       <input
-        v-model="model"
+        v-model="value"
         :name="name"
         :id="name"
         :type="type"
         :placeholder="placeholder"
         :required="required"
-        @input="handleChange"
+        @input="handleInput"
         @blur="handleBlur"
         :aria-invalid="errorMessage ? 'true' : 'false'"
         :aria-errormessage="`errormessage-${name}`"

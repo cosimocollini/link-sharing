@@ -23,12 +23,11 @@ const { handleSubmit, isSubmitting } = useForm<UserDetails>({
 
 const onSubmit = handleSubmit(async (values) => {
   console.log('User details updated:', values);
+  console.log('User details updated 2:', userStore.user);
   const res = await userStore.dispatchPersonalDetails(values);
-  // if (res.success) {
-  //   startNotification();
-  // } else {
-  //   console.error('Failed to update user details:', res.status);
-  // }
+  if (res.success) {
+    startNotification();
+  }
 });
 </script>
 
@@ -61,7 +60,7 @@ const onSubmit = handleSubmit(async (values) => {
             :required="true"
           />
           <Input
-            v-model.lowercase="email"
+            v-model="email"
             name="email"
             type="email"
             placeholder="e.g. email@example.com"
