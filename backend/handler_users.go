@@ -176,7 +176,7 @@ func (cfg *apiConfig) handleUsersLogin(c *gin.Context) {
 		LastName:    user.LastName.String,
 	}
 
-	c.JSON(http.StatusOK, resp)
+	c.JSON(http.StatusOK, APIResponse[UserDetails]{true, resp, http.StatusOK})
 }
 
 func (cfg *apiConfig) handleUsersUpdateDetails(c *gin.Context) {
@@ -198,6 +198,8 @@ func (cfg *apiConfig) handleUsersUpdateDetails(c *gin.Context) {
 	}
 
 	email := strings.TrimSpace(strings.ToLower(params.PublicEmail))
+	firstName := strings.TrimSpace(params.FirstName)
+	lastName := strings.TrimSpace(params.LastName)
 
 	tokenString, err := c.Cookie("link_sharing_token")
 	if err != nil {
@@ -216,8 +218,8 @@ func (cfg *apiConfig) handleUsersUpdateDetails(c *gin.Context) {
 	updatedUser, err := cfg.DB.UpdateUserPersonalInfo(c.Request.Context(), database.UpdateUserPersonalInfoParams{
 		ID:          userID,
 		PublicEmail: sql.NullString{String: email, Valid: email != ""},
-		FirstName:   sql.NullString{String: params.FirstName, Valid: params.FirstName != ""},
-		LastName:    sql.NullString{String: params.LastName, Valid: params.LastName != ""},
+		FirstName:   sql.NullString{String: firstName, Valid: firstName != ""},
+		LastName:    sql.NullString{String: lastName, Valid: lastName != ""},
 	})
 
 	if err != nil {

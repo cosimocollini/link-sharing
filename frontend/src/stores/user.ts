@@ -1,17 +1,15 @@
-import { ref, computed, inject } from 'vue';
+import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 import type {
   APIResponse,
   InputCreateUser,
   Credentials,
   UserDetails,
-  UserDetailsResponse,
   Link
 } from '@/services/types';
 import API from '@/services/api';
 import type { AxiosError } from 'axios';
 import { mapUserResponseToDomain } from '@/services/userMapper';
-import router from '@/router';
 
 export const useUserStore = defineStore('user', () => {
   const links = ref<Link[]>([]);
@@ -24,8 +22,6 @@ export const useUserStore = defineStore('user', () => {
     profilePicture: undefined
   });
   const isAuthenticated = computed(() => user.value.isAuthenticated);
-
-  const startNotification = inject('notification') as () => void;
 
   const setUserDetails = (data: UserDetails) => {
     user.value = data;
@@ -68,77 +64,78 @@ export const useUserStore = defineStore('user', () => {
     resetUser();
   };
 
-  async function dispatchRegisterUser(input: InputCreateUser): Promise<APIResponse<null>> {
+  const dispatchRegisterUser = async (
+    input: InputCreateUser
+  ): Promise<{ success: boolean; error?: string }> => {
     try {
       const { status, data } = await API.createUser(input);
       if (status === 201) {
         await dispatchFetchCurrentUser();
-        return { success: true, content: null };
+        return { success: true };
       }
-      return { success: false, content: null };
+      return { success: false };
     } catch (err) {
-      return { success: false, content: null };
+      return { success: false };
     }
-  }
+  };
 
-  async function dispatchPersonalDetails(
+  const dispatchPersonalDetails = async (
     newData: UserDetails
-  ): Promise<APIResponse<UserDetails | null>> {
+  ): Promise<{ success: boolean; error?: string }> => {
     try {
       const { status, data } = await API.updateUser(newData);
       if (status === 200) {
-        startNotification();
         setUserDetails(mapUserResponseToDomain(data.content));
-        return { success: true, content: mapUserResponseToDomain(data.content) };
+        return { success: true };
       }
-      return { success: false, content: null };
+      return { success: false, error: 'Failed to update user details' };
     } catch (err) {
       const _error = err as AxiosError<string>;
-      return { success: false, content: null };
+      return { success: false, error: _error.message };
     }
-  }
+  };
 
-  async function dispatchLoginUser(creds: Credentials): Promise<void> {
+  const dispatchLoginUser = async (
+    creds: Credentials
+  ): Promise<{ success: boolean; error?: string }> => {
     try {
-      const { status, data } = await API.login(creds);
-      console.log('Login response:', { status, data });
-      console.log('Login response:', data.content.firstName);
-      if (status === 200 && data) {
+      const { data } = await API.login(creds);
+      if (data.success) {
         setUserDetails(mapUserResponseToDomain(data.content));
-        router.replace({ name: 'dashboard' });
+        return { success: true };
       }
+      return { success: false, error: 'Failed login' };
     } catch (err) {
       const _error = err as AxiosError<string>;
+      return { success: false, error: _error.message };
     }
-  }
+  };
 
-  async function dispatchLogoutUser(): Promise<void> {
+  const dispatchLogoutUser = async (): Promise<void> => {
     try {
       await API.logout();
     } catch {
     } finally {
       resetUser();
     }
-  }
+  };
 
-  async function dispatchFetchCurrentUser(): Promise<void> {
+  const dispatchFetchCurrentUser = async (): Promise<void> => {
     try {
       const { status, data } = await API.me();
       if (status === 200) {
-        console.log('ME:', data, user.value);
         setUserDetails(mapUserResponseToDomain(data.content));
-        console.log('ME:', data, user.value);
       }
     } catch {
       resetUser();
     } finally {
       loading.value = false;
     }
-  }
+  };
 
-  async function init() {
+  const init = async () => {
     await dispatchFetchCurrentUser();
-  }
+  };
 
   return {
     user,

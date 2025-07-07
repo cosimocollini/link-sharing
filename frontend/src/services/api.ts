@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { type AxiosResponse } from 'axios';
 
 import type {
   APIResponse,
@@ -44,8 +44,8 @@ async function logout() {
   return await authAPI.post<APIResponse<null>>('logout', {}, { headers: {} });
 }
 
-async function login(creds: Credentials) {
-  return await authAPI.post<APIResponse<UserDetailsResponse>>('login', creds, { headers: {} });
+async function login(creds: Credentials): Promise<AxiosResponse<APIResponse<UserDetailsResponse>>> {
+  return await authAPI.post('login', creds, { headers: {} });
 }
 
 async function me() {

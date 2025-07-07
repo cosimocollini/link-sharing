@@ -15,7 +15,12 @@ interface LoginForm {
 const { handleSubmit, submitForm, isSubmitting } = useForm<LoginForm>();
 
 const onSubmit = handleSubmit(async (values) => {
-  await userStore.dispatchLoginUser(values);
+  const { success, error } = await userStore.dispatchLoginUser(values);
+  if (success) {
+    await router.replace({ name: 'dashboard' });
+  } else {
+    console.error('Login failed:', error);
+  }
 });
 </script>
 

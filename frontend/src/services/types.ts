@@ -1,5 +1,6 @@
 export type APIResponse<T> = {
   success: boolean;
+  status: number;
   content: T;
 };
 
