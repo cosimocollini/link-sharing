@@ -20,10 +20,11 @@ type UserResponse struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 type UserDetails struct {
-	ID          string `json:"id"`
-	PublicEmail string `json:"publicEmail"`
-	FirstName   string `json:"firstName"`
-	LastName    string `json:"lastName"`
+	ID           string `json:"id"`
+	PublicEmail  string `json:"publicEmail"`
+	FirstName    string `json:"firstName"`
+	LastName     string `json:"lastName"`
+	AvatarBase64 string `json:"avatarBase64,omitempty"`
 }
 
 func (cfg *apiConfig) handlerUsersCreate(c *gin.Context) {
@@ -113,10 +114,11 @@ func (cfg *apiConfig) handlerUsersMe(c *gin.Context) {
 	}
 
 	resp := UserDetails{
-		ID:          user.ID,
-		PublicEmail: user.PublicEmail.String,
-		FirstName:   user.FirstName.String,
-		LastName:    user.LastName.String,
+		ID:           user.ID,
+		PublicEmail:  user.PublicEmail.String,
+		FirstName:    user.FirstName.String,
+		LastName:     user.LastName.String,
+		AvatarBase64: user.AvatarBase64.String,
 	}
 
 	c.JSON(http.StatusOK, APIResponse[UserDetails]{true, resp, http.StatusOK})
@@ -184,6 +186,7 @@ func (cfg *apiConfig) handleUsersUpdateDetails(c *gin.Context) {
 		PublicEmail string `json:"email" validate:"omitempty,email"`
 		FirstName   string `json:"firstName" validate:"required,min=5"`
 		LastName    string `json:"lastName" validate:"required,min=5"`
+		AvatarB64   string `json:"profileImage" validate:"omitempty,datauri"`
 	}
 	params := parameters{}
 	if err := c.ShouldBindJSON(&params); err != nil {
@@ -216,10 +219,11 @@ func (cfg *apiConfig) handleUsersUpdateDetails(c *gin.Context) {
 	}
 
 	updatedUser, err := cfg.DB.UpdateUserPersonalInfo(c.Request.Context(), database.UpdateUserPersonalInfoParams{
-		ID:          userID,
-		PublicEmail: sql.NullString{String: email, Valid: email != ""},
-		FirstName:   sql.NullString{String: firstName, Valid: firstName != ""},
-		LastName:    sql.NullString{String: lastName, Valid: lastName != ""},
+		ID:           userID,
+		PublicEmail:  sql.NullString{String: email, Valid: email != ""},
+		FirstName:    sql.NullString{String: firstName, Valid: firstName != ""},
+		LastName:     sql.NullString{String: lastName, Valid: lastName != ""},
+		AvatarBase64: sql.NullString{String: params.AvatarB64, Valid: params.AvatarB64 != ""},
 	})
 
 	if err != nil {
@@ -229,10 +233,11 @@ func (cfg *apiConfig) handleUsersUpdateDetails(c *gin.Context) {
 	}
 
 	resp := UserDetails{
-		ID:          updatedUser.ID,
-		PublicEmail: updatedUser.PublicEmail.String,
-		FirstName:   updatedUser.FirstName.String,
-		LastName:    updatedUser.LastName.String,
+		ID:           updatedUser.ID,
+		PublicEmail:  updatedUser.PublicEmail.String,
+		FirstName:    updatedUser.FirstName.String,
+		LastName:     updatedUser.LastName.String,
+		AvatarBase64: updatedUser.AvatarBase64.String,
 	}
 
 	c.JSON(http.StatusOK, APIResponse[UserDetails]{true, resp, http.StatusOK})

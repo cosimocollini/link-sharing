@@ -36,12 +36,12 @@ export interface UserDetails {
   firstName: string;
   lastName: string;
   email?: string;
-  profilePicture?: File | undefined;
+  profilePicture: string | ArrayBuffer | null;
 }
 export interface UserDetailsResponse {
   ID: string;
   firstName: string;
   lastName: string;
   publicEmail?: string;
-  profilePicture?: File | undefined;
+  avatarBase64: string | ArrayBuffer | null;
 }

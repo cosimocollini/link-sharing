@@ -4,8 +4,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile.dev
     volumes:
-      - ./backend:/app         # codice Go live‑reload
-      - ./backend/data:/data      # DB persistente in locale
+      - ./backend:/app
+      - ./backend/data:/data
     ports:
       - "8080:8080"
 

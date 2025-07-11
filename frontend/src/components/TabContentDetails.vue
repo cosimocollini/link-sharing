@@ -22,8 +22,6 @@ const { handleSubmit, isSubmitting } = useForm<UserDetails>({
 });
 
 const onSubmit = handleSubmit(async (values) => {
-  console.log('User details updated:', values);
-  console.log('User details updated 2:', userStore.user);
   const res = await userStore.dispatchPersonalDetails(values);
   if (res.success) {
     startNotification();

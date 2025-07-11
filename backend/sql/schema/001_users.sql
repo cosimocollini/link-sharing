@@ -6,6 +6,7 @@ CREATE TABLE users (
     password TEXT NOT NULL,
     first_name TEXT,
     last_name TEXT,
+    avatar_base64 TEXT,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

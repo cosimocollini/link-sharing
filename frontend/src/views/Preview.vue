@@ -6,7 +6,7 @@ import { LINKS } from '@/constants';
 const userStore = useUserStore();
 
 const userImage = computed(() => {
-  return userStore.user.profilePicture ? URL.createObjectURL(userStore.user.profilePicture) : false;
+  return userStore.user.profilePicture;
 });
 </script>
 

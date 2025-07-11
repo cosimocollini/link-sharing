@@ -14,7 +14,7 @@ import (
 const createUser = `-- name: CreateUser :one
 INSERT INTO users (id, email, password, first_name, last_name, created_at, updated_at)
 VALUES (?, ?, ?, ?, ?, ?, ?)
-RETURNING id, email, public_email, password, first_name, last_name, created_at, updated_at
+RETURNING id, email, public_email, password, first_name, last_name, avatar_base64, created_at, updated_at
 `
 
 type CreateUserParams struct {
@@ -45,65 +45,218 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.Password,
 		&i.FirstName,
 		&i.LastName,
+		&i.AvatarBase64,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
 	return i, err
 }
 
-const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, email, public_email, password, first_name, last_name, created_at, updated_at FROM users WHERE email = ?
+const deleteSocialLink = `-- name: DeleteSocialLink :exec
+DELETE FROM social_links
+WHERE id IN (SELECT value FROM json_each(?))
+AND user_id = (?)
 `
 
-func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error) {
+func (q *Queries) DeleteSocialLink(ctx context.Context, userID string) error {
+	_, err := q.db.ExecContext(ctx, deleteSocialLink, userID)
+	return err
+}
+
+const getUserByEmail = `-- name: GetUserByEmail :one
+SELECT 
+    u.id,
+    u.password,
+    u.public_email,
+    u.first_name,
+    u.last_name,
+    u.avatar_base64,
+    json_group_array(
+    json_object(
+      'id', sl.id,
+      'platform', sl.platform,
+      'url', sl.url,
+      'display_order', sl.display_order
+    )
+  ) AS social_links_json
+FROM users u
+LEFT JOIN social_links sl ON u.id = sl.user_id
+WHERE email = ?
+GROUP BY u.id
+`
+
+type GetUserByEmailRow struct {
+	ID              string
+	Password        string
+	PublicEmail     sql.NullString
+	FirstName       sql.NullString
+	LastName        sql.NullString
+	AvatarBase64    sql.NullString
+	SocialLinksJson interface{}
+}
+
+func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error) {
 	row := q.db.QueryRowContext(ctx, getUserByEmail, email)
-	var i User
+	var i GetUserByEmailRow
 	err := row.Scan(
 		&i.ID,
-		&i.Email,
-		&i.PublicEmail,
 		&i.Password,
+		&i.PublicEmail,
 		&i.FirstName,
 		&i.LastName,
-		&i.CreatedAt,
-		&i.UpdatedAt,
+		&i.AvatarBase64,
+		&i.SocialLinksJson,
 	)
 	return i, err
 }
 
 const getUserById = `-- name: GetUserById :one
-SELECT id, email, public_email, password, first_name, last_name, created_at, updated_at FROM users WHERE id = ?
+SELECT 
+    u.id,
+    u.public_email,
+    u.first_name,
+    u.last_name,
+    u.avatar_base64,
+    json_group_array(
+    json_object(
+      'id', sl.id,
+      'platform', sl.platform,
+      'url', sl.url,
+      'display_order', sl.display_order
+    )
+  ) AS social_links_json
+FROM users u
+LEFT JOIN social_links sl ON u.id = sl.user_id
+WHERE u.id = ?
+GROUP BY u.id
 `
 
-func (q *Queries) GetUserById(ctx context.Context, id string) (User, error) {
+type GetUserByIdRow struct {
+	ID              string
+	PublicEmail     sql.NullString
+	FirstName       sql.NullString
+	LastName        sql.NullString
+	AvatarBase64    sql.NullString
+	SocialLinksJson interface{}
+}
+
+func (q *Queries) GetUserById(ctx context.Context, id string) (GetUserByIdRow, error) {
 	row := q.db.QueryRowContext(ctx, getUserById, id)
-	var i User
+	var i GetUserByIdRow
 	err := row.Scan(
 		&i.ID,
-		&i.Email,
 		&i.PublicEmail,
-		&i.Password,
 		&i.FirstName,
 		&i.LastName,
-		&i.CreatedAt,
-		&i.UpdatedAt,
+		&i.AvatarBase64,
+		&i.SocialLinksJson,
 	)
 	return i, err
 }
 
+const listSocialLinksByUserId = `-- name: ListSocialLinksByUserId :many
+SELECT id, user_id, platform, url, display_order, created_at, updated_at FROM social_links
+WHERE user_id = ?
+ORDER BY display_order
+`
+
+func (q *Queries) ListSocialLinksByUserId(ctx context.Context, userID string) ([]SocialLink, error) {
+	rows, err := q.db.QueryContext(ctx, listSocialLinksByUserId, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []SocialLink
+	for rows.Next() {
+		var i SocialLink
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Platform,
+			&i.Url,
+			&i.DisplayOrder,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const updateSocialLinks = `-- name: UpdateSocialLinks :many
+INSERT INTO social_links (user_id, platform, url, display_order, updated_at)
+VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+ON CONFLICT(user_id, platform) DO UPDATE SET
+    url = EXCLUDED.url,
+    display_order = EXCLUDED.display_order,
+    updated_at = CURRENT_TIMESTAMP
+RETURNING id, user_id, platform, url, display_order, created_at, updated_at
+`
+
+type UpdateSocialLinksParams struct {
+	UserID       string
+	Platform     string
+	Url          string
+	DisplayOrder sql.NullInt64
+}
+
+func (q *Queries) UpdateSocialLinks(ctx context.Context, arg UpdateSocialLinksParams) ([]SocialLink, error) {
+	rows, err := q.db.QueryContext(ctx, updateSocialLinks,
+		arg.UserID,
+		arg.Platform,
+		arg.Url,
+		arg.DisplayOrder,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []SocialLink
+	for rows.Next() {
+		var i SocialLink
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.Platform,
+			&i.Url,
+			&i.DisplayOrder,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateUserPersonalInfo = `-- name: UpdateUserPersonalInfo :one
 UPDATE users
-SET first_name = ?, last_name = ?, public_email = ?, updated_at = ?
+SET first_name = ?, last_name = ?, public_email = ?, avatar_base64 = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
-RETURNING id, email, public_email, password, first_name, last_name, created_at, updated_at
+RETURNING id, email, public_email, password, first_name, last_name, avatar_base64, created_at, updated_at
 `
 
 type UpdateUserPersonalInfoParams struct {
-	FirstName   sql.NullString
-	LastName    sql.NullString
-	PublicEmail sql.NullString
-	UpdatedAt   time.Time
-	ID          string
+	FirstName    sql.NullString
+	LastName     sql.NullString
+	PublicEmail  sql.NullString
+	AvatarBase64 sql.NullString
+	ID           string
 }
 
 func (q *Queries) UpdateUserPersonalInfo(ctx context.Context, arg UpdateUserPersonalInfoParams) (User, error) {
@@ -111,7 +264,7 @@ func (q *Queries) UpdateUserPersonalInfo(ctx context.Context, arg UpdateUserPers
 		arg.FirstName,
 		arg.LastName,
 		arg.PublicEmail,
-		arg.UpdatedAt,
+		arg.AvatarBase64,
 		arg.ID,
 	)
 	var i User
@@ -122,6 +275,7 @@ func (q *Queries) UpdateUserPersonalInfo(ctx context.Context, arg UpdateUserPers
 		&i.Password,
 		&i.FirstName,
 		&i.LastName,
+		&i.AvatarBase64,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)

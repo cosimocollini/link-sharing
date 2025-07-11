@@ -6,6 +6,6 @@ export function mapUserResponseToDomain(data: UserDetailsResponse): UserDetails 
     firstName: data.firstName,
     lastName: data.lastName,
     email: data.publicEmail,
-    profilePicture: data.profilePicture ? (data.profilePicture as File) : undefined
+    profilePicture: data.avatarBase64
   };
 }

@@ -3,7 +3,6 @@ FROM golang:1.24-alpine
 WORKDIR /app
 RUN apk add --no-cache git curl sqlite
 
-# Air per hot‑reload
 RUN go install github.com/air-verse/air@latest
 
 COPY go.mod go.sum ./
@@ -11,7 +10,6 @@ RUN go mod download
 
 COPY . .
 
-# Monta il DB locale via volume
 ENV DB_PATH=/data/sqlite.db
 
 # Avvia air

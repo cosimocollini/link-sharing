@@ -6,32 +6,29 @@ import SvgIcon from '../SvgIcon.vue';
 const props = defineProps<{
   inputId: string;
   rules?: any;
-  modelValue: File | undefined;
+  modelValue: string | ArrayBuffer | null;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', file: File | undefined): void;
+  (e: 'update:modelValue', file: string | ArrayBuffer | null): void;
 }>();
 
-const bgImage = ref('');
+const bgImage = ref(props.modelValue || null);
 
-const {
-  value: modelValue,
-  errorMessage,
-  handleChange,
-  meta
-} = useField('fileUpload', props.rules, {
+const { value, errorMessage, handleChange, meta } = useField(props.inputId, props.rules, {
   initialValue: props.modelValue || null
 });
 
 const dropZoneEl = ref<HTMLElement | null>(null);
 
 const processFile = (file: File) => {
-  const url = URL.createObjectURL(file);
-  if (bgImage.value) URL.revokeObjectURL(bgImage.value);
-  bgImage.value = url;
-  emit('update:modelValue', file);
-  handleChange(file);
+  const reader = new FileReader();
+  reader.onloadend = () => {
+    bgImage.value = reader.result;
+    emit('update:modelValue', reader.result);
+    handleChange(reader.result);
+  };
+  reader.readAsDataURL(file);
 };
 
 const handleUpload = (e: Event) => {
@@ -103,7 +100,7 @@ const onKeyDown = (e: Event) => {
       </div>
 
       <input
-        name="fileUpload"
+        name="profilePicture"
         :id="props.inputId"
         type="file"
         class="sr-only"

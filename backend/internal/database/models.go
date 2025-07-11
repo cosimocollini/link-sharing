@@ -27,12 +27,13 @@ type SocialLink struct {
 }
 
 type User struct {
-	ID          string
-	Email       string
-	PublicEmail sql.NullString
-	Password    string
-	FirstName   sql.NullString
-	LastName    sql.NullString
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	ID           string
+	Email        string
+	PublicEmail  sql.NullString
+	Password     string
+	FirstName    sql.NullString
+	LastName     sql.NullString
+	AvatarBase64 sql.NullString
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }

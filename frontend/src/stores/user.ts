@@ -19,7 +19,7 @@ export const useUserStore = defineStore('user', () => {
     firstName: '',
     lastName: '',
     email: '',
-    profilePicture: undefined
+    profilePicture: null
   });
   const isAuthenticated = computed(() => user.value.isAuthenticated);
 
@@ -56,7 +56,7 @@ export const useUserStore = defineStore('user', () => {
       firstName: '',
       lastName: '',
       email: '',
-      profilePicture: undefined
+      profilePicture: null
     };
   };
 
