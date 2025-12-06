@@ -65,6 +65,7 @@ export const LINKS = {
     icon: 'stackoverflow'
   }
 } as const;
+const ciao =
 
 type LinkKey = keyof typeof LINKS;
 type SingleLink = (typeof LINKS)[LinkKey];

@@ -24,7 +24,7 @@ const { handleSubmit, errors } = useForm<RegisterForm>({
 
 const onSubmit = handleSubmit(async (values) => {
   //alert(JSON.stringify(values, null, 2));
-  const { success, status } = await userStore.dispatchRegisterUser(values);
+  const { success, error } = await userStore.dispatchRegisterUser(values);
 });
 </script>
 

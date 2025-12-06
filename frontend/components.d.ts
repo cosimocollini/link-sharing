@@ -11,8 +11,6 @@ declare module 'vue' {
     CustomButton: typeof import('./src/components/CustomButton.vue')['default']
     CustomSelect: typeof import('./src/components/inputs/CustomSelect.vue')['default']
     DragDropList: typeof import('./src/components/DragDropList.vue')['default']
-    DragDropList2: typeof import('./src/components/DragDropList2.vue')['default']
-    HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     Input: typeof import('./src/components/inputs/Input.vue')['default']
     InputFile: typeof import('./src/components/inputs/InputFile.vue')['default']
     LinkConstructor: typeof import('./src/components/forms/LinkConstructor.vue')['default']

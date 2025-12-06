@@ -184,8 +184,8 @@ func (cfg *apiConfig) handleUsersLogin(c *gin.Context) {
 func (cfg *apiConfig) handleUsersUpdateDetails(c *gin.Context) {
 	type parameters struct {
 		PublicEmail string `json:"email" validate:"omitempty,email"`
-		FirstName   string `json:"firstName" validate:"required,min=5"`
-		LastName    string `json:"lastName" validate:"required,min=5"`
+		FirstName   string `json:"firstName" validate:"required,min=3"`
+		LastName    string `json:"lastName" validate:"required,min=3"`
 		AvatarB64   string `json:"profileImage" validate:"omitempty,datauri"`
 	}
 	params := parameters{}

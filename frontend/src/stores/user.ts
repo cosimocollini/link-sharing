@@ -30,8 +30,9 @@ export const useUserStore = defineStore('user', () => {
   const addLink = () => {
     const newLink: Link = {
       id: crypto.randomUUID(),
-      name: '',
-      url: ''
+      platform: '',
+      url: '',
+      displayOrder: links.value.length
     };
     links.value.push(newLink);
   };
@@ -41,7 +42,7 @@ export const useUserStore = defineStore('user', () => {
   const updateLink = (newLink: Link) => {
     const link = links.value.find((link) => newLink.id === link.id);
     if (link) {
-      link.name = newLink.name;
+      link.platform = newLink.platform;
       link.url = newLink.url;
     }
   };

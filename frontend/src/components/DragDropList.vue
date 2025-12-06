@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-interface Link {
-  id: string;
-  name?: string;
-  url?: string;
-}
+import type { Link } from '@/services/types';
 
 const props = defineProps<{
   initialItems: Link[];

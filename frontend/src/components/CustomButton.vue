@@ -30,7 +30,7 @@ const classes = computed(() => ({
 }));
 
 const onClick = () => {
-  emit('click', 1);
+  emit('click', 2);
 };
 </script>
 
