@@ -33,3 +33,15 @@ frontend/.vscode/*
 
 backend/data/
 backend/out
+
+# Test binary, built with `go test -c`
+backend/*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+backend/*.out
+
+# Dependency directories (remove the comment below to include it)
+backend/vendor/
+
+# Go workspace file
+backend/go.work
