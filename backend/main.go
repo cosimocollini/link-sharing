@@ -29,7 +29,7 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	connString := "file://" + getEnv("DB_FILE_PATH")
+	connString := "file://" + getEnv("DB_PATH")
 
 	jwtSecret := getEnv("JWT_SECRET")
 

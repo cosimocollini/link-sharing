@@ -2,7 +2,7 @@ services:
   backend:
     build:
       context: ./backend
-      target: dev
+      target: prod
     volumes:
       - ./backend:/app
       - ./backend/data:/data
@@ -11,21 +11,17 @@ services:
     environment:
       - DB_PATH=${DB_PATH}
       - DB_PORT=${DB_PORT}
-    command: air -c .air.toml 
 
   frontend:
     build:
       context: ./frontend
-      target: dev
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      target: prod
     ports:
       - "5173:5173"
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - VITE_API_BASE_URL=${VITE_API_ENDPOINT}
-    command: npm run dev 
+    command: node dist/index.js
     depends_on:
       - backend
 
