@@ -11,12 +11,7 @@ import path from 'path';
 export default defineConfig({
   plugins: [
     vue(),
-    (createSvgIconsPlugin as any)({
-      // Specify the icon folder to be cached
-      iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
-      // Specify symbolId format
-      symbolId: 'icon-[name]'
-    }),
+    svgLoader(),
     Components({
       dirs: ['src/components'],
       extensions: ['vue'],

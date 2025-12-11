@@ -12,7 +12,9 @@ body {
   font-variation-settings: 'wdth' 100;
   background-color: $color-grey-light;
   color: $color-grey-dark;
-  overflow: hidden;
+  @include respond-to('xl') {
+    overflow-y: hodden;
+  }
 }
 
 p {

@@ -43,7 +43,7 @@ const onClick = () => {
     :aria-disabled="props.disable"
   >
     <SvgIcon v-if="props.iconLeft" :name="props.iconLeft" class="mr-2" />
-    {{ label }}
+    <span>{{ label }}</span>
     <SvgIcon v-if="props.iconRight" :name="props.iconRight" class="ml-2" />
   </button>
 </template>

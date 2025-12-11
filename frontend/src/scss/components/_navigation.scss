@@ -7,22 +7,54 @@ nav {
   display: flex;
   align-items: center;
 
-  > div {
+  .box {
     width: 100%;
     background-color: $white;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 16px;
+
+    .logo-desktop {
+      display: none;
+    }
+    .logo-mobile {
+      display: inline-block;
+      width: rem(32) !important;
+      height: rem(32) !important;
+    }
+    .preview-button {
+      padding: 10px 16px;
+      .icon {
+        margin-right: 0;
+      }
+      span {
+        display: none;
+      }
+    }
   }
 
   @include respond-to('md') {
     height: $navigation-height-desktop;
 
-    .logo-desktop {
-      display: block;
-      width: rem(140) !important;
-      height: rem(32) !important;
+    .box {
+      .logo-mobile {
+        display: none;
+      }
+      .logo-desktop {
+        display: inline-block;
+        width: rem(140) !important;
+        height: rem(32) !important;
+      }
+      .preview-button {
+        padding: 10px 16px;
+        .icon {
+          display: none;
+        }
+        span {
+          display: block;
+        }
+      }
     }
   }
 }

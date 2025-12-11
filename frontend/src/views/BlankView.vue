@@ -10,10 +10,12 @@ import SvgIcon from '@/components/SvgIcon.vue';
 </script>
 
 <style lang="scss">
+@use '@/scss/abstracts' as *;
+
 .blank-view {
   .logo-desktop {
     width: 100%;
-    height: auto;
+    height: rem(50);
     max-width: 182px;
     margin: 0 auto;
   }

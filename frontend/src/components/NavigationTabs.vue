@@ -2,6 +2,7 @@
 import { TabsContent, TabsIndicator, TabsList, TabsRoot, TabsTrigger } from 'reka-ui';
 import TabContentDetails from './TabContentDetails.vue';
 import TabContentLinks from './TabContentLinks.vue';
+import SvgIcon from './SvgIcon.vue';
 </script>
 
 <template>
@@ -10,8 +11,12 @@ import TabContentLinks from './TabContentLinks.vue';
       <TabsIndicator class="TagsIndicator">
         <div style="width: 100%; height: 100%" class="bg-grass8 w-full h-full" />
       </TabsIndicator>
-      <TabsTrigger class="TabsTrigger" value="tab1"> Links </TabsTrigger>
-      <TabsTrigger class="TabsTrigger" value="tab2"> Profile Details </TabsTrigger>
+      <TabsTrigger class="TabsTrigger" value="tab1"
+        ><SvgIcon name="link" /><span>Links</span></TabsTrigger
+      >
+      <TabsTrigger class="TabsTrigger" value="tab2"
+        ><SvgIcon name="user" /><span>Profile Details</span></TabsTrigger
+      >
     </TabsList>
     <Teleport defer to="#tab-content">
       <TabsContent class="TabsContent" value="tab1">
@@ -44,6 +49,7 @@ input {
   display: flex;
   position: relative;
   gap: 16px;
+  justify-content: center;
 }
 
 .TagsIndicator {
@@ -75,10 +81,17 @@ input {
   user-select: none;
   border-radius: 8px;
   cursor: pointer;
+
+  span {
+    display: none;
+  }
 }
 
 .TabsTrigger:hover {
   color: $color-main;
+  .icon svg {
+    fill: $color-main;
+  }
 }
 .TabsTrigger[data-state='active'] {
   color: $color-main;

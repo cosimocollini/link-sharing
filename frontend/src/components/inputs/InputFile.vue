@@ -78,47 +78,44 @@ const onKeyDown = (e: Event) => {
   <div class="file-upload-wrapper">
     <label :for="props.inputId" class="file-upload-label body-m"> Profile picture </label>
 
-    <button
-      ref="dropZoneEl"
-      class="file-upload-dropzone"
-      type="button"
-      aria-label="Upload image"
-      tabindex="0"
-      @keydown="onKeyDown"
-      @click="onKeyDown"
-      @dragover="onDragOver"
-      @dragleave="onDragLeave"
-      @drop="onDrop"
-      :style="bgImage ? { backgroundImage: 'url(' + bgImage + ')' } : {}"
-      :class="bgImage ? 'full' : 'empty'"
-    >
-      <div class="text-wrapper">
-        <SvgIcon name="image" aria-hidden="true" />
-
-        <span class="empty-label">+ Upload image</span>
-        <span class="full-label">Change image</span>
-      </div>
-
-      <input
-        name="profilePicture"
-        :id="props.inputId"
-        type="file"
-        class="sr-only"
-        @change="handleUpload"
-        accept="image/png, image/jpeg"
-        aria-describedby="file-upload-desc"
-      />
-    </button>
-
-    <p id="file-upload-desc" class="sr-only">
-      Select an image PNG or JPEG. Image must be below 1024x1024px.
-    </p>
-
-    <p class="body-s">Image must be below 1024x1024px. Use PNG or JPG format.</p>
-
-    <p class="message" v-show="errorMessage">
-      {{ errorMessage }}
-    </p>
+    <div class="file-upload-dropzone-wrapper">
+      <button
+        ref="dropZoneEl"
+        class="file-upload-dropzone"
+        type="button"
+        aria-label="Upload image"
+        tabindex="0"
+        @keydown="onKeyDown"
+        @click="onKeyDown"
+        @dragover="onDragOver"
+        @dragleave="onDragLeave"
+        @drop="onDrop"
+        :style="bgImage ? { backgroundImage: 'url(' + bgImage + ')' } : {}"
+        :class="bgImage ? 'full' : 'empty'"
+      >
+        <div class="text-wrapper">
+          <SvgIcon name="image" aria-hidden="true" />
+          <span class="empty-label">+ Upload image</span>
+          <span class="full-label">Change image</span>
+        </div>
+        <input
+          name="profilePicture"
+          :id="props.inputId"
+          type="file"
+          class="sr-only"
+          @change="handleUpload"
+          accept="image/png, image/jpeg"
+          aria-describedby="file-upload-desc"
+        />
+      </button>
+      <p id="file-upload-desc" class="sr-only">
+        Select an image PNG or JPEG. Image must be below 1024x1024px.
+      </p>
+      <p class="body-s">Image must be below 1024x1024px. Use PNG or JPG format.</p>
+      <p class="message" v-show="errorMessage">
+        {{ errorMessage }}
+      </p>
+    </div>
   </div>
 </template>
 
@@ -129,22 +126,15 @@ const onKeyDown = (e: Event) => {
   background-color: $color-grey-light;
   padding: rem(20);
   border-radius: 12px;
-  display: flex;
   align-items: center;
-  gap: rem(24);
 
   .file-upload-label {
-    flex: 1 1 auto;
-  }
-
-  > p {
-    flex: 0 1 auto;
+    display: block;
+    margin-bottom: rem(16);
   }
 
   .file-upload-dropzone {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
     width: 193px;
     height: 193px;
     border-radius: 8px;
@@ -156,7 +146,7 @@ const onKeyDown = (e: Event) => {
     position: relative;
     overflow: hidden;
     border: none;
-    flex: 0 1 auto;
+    margin-bottom: rem(24);
 
     &:focus-visible,
     &.drag-over {
@@ -166,11 +156,12 @@ const onKeyDown = (e: Event) => {
 
     .text-wrapper {
       @extend .heading-s;
+      position: relative;
       color: $color-main;
       text-align: center;
       z-index: 1;
 
-      svg {
+      .icon {
         display: block;
         margin: 0 auto;
         margin-bottom: 8px;
@@ -217,6 +208,26 @@ const onKeyDown = (e: Event) => {
         .empty-label {
           display: none;
         }
+      }
+    }
+  }
+  @include respond-to('md') {
+    display: flex;
+    .file-upload-label {
+      flex: 1;
+      width: 30%;
+    }
+    .file-upload-dropzone-wrapper {
+      display: flex;
+      align-items: center;
+      gap: rem(24);
+      flex: 2;
+
+      .file-upload-dropzone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0;
       }
     }
   }

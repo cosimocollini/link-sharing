@@ -58,7 +58,7 @@ function addLink() {
       ></Button>
     </div>
 
-    <div class="empty-link-list-banner px-5 mb-5" v-if="links.length === 0">
+    <div class="empty-link-list-banner mx-5 mb-5" v-if="links.length === 0">
       <div class="empty-link-list-svg">
         <svg xmlns="http://www.w3.org/2000/svg" width="250" height="161" fill="none">
           <path
@@ -179,14 +179,16 @@ function addLink() {
   }
 
   .footer {
-    flex: 0 1 auto;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    border-top: 1px solid $color-grey-medium;
     position: sticky;
     bottom: 0;
     left: 0;
+    border-top: 1px solid $color-grey-medium;
+    background-color: $white;
+
+    button {
+      display: block;
+      width: 100%;
+    }
   }
 
   .empty-link-list-banner {
@@ -214,6 +216,21 @@ function addLink() {
     width: 100%;
     flex: 1 1 auto;
     overflow-y: auto;
+  }
+  @include respond-to('md') {
+    .footer {
+      flex: 0 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      position: unset;
+      bottom: unset;
+      left: unset;
+
+      button {
+        width: auto;
+      }
+    }
   }
 }
 </style>

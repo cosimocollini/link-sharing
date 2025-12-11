@@ -7,9 +7,10 @@ import Button from '@/components/CustomButton.vue';
 <template>
   <nav>
     <div class="box">
+      <SvgIcon name="logo" class="logo-mobile"></SvgIcon>
       <SvgIcon name="logo-complete" class="logo-desktop"></SvgIcon>
       <NavigationTabs />
-      <Button label="Preview" level="secondary"></Button>
+      <Button label="Preview" level="secondary" class="preview-button" icon-left="eye"></Button>
     </div>
   </nav>
 </template>
