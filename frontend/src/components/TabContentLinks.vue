@@ -31,13 +31,12 @@ const updateLink = (index: number, updated: Link) => {
   console.log('Link aggiornato:', updated);
 };
 
-const onSubmit = handleSubmit(async (values: any) => {
-  console.log('Form submitted with links:', values);
+const onSubmit = handleSubmit(async () => {
+  console.log('Form submitted with links:', links.value);
   startNotification();
 });
 
 function addLink() {
-  // push({ name: '', url: '' });
   store.addLink();
 }
 </script>
@@ -142,7 +141,7 @@ function addLink() {
       </p>
     </div>
 
-    <form v-else class="links-list px-5" novalidate @submit.prevent="onSubmit">
+    <form v-else class="links-list px-5" novalidate>
       <DragDropList :initialItems="links" @update:items="updateItems">
         <template #item="{ item, index }">
           <LinkConstructor
@@ -155,13 +154,7 @@ function addLink() {
     </form>
 
     <div class="footer py-4 px-3">
-      <Button
-        label="Save"
-        level="primary"
-        :disable="isSubmitting"
-        type="submit"
-        @click="() => onSubmit()"
-      />
+      <Button label="Save" level="primary" type="button" @click="onSubmit" />
     </div>
   </div>
 </template>

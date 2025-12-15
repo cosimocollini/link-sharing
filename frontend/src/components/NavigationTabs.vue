@@ -85,6 +85,14 @@ input {
   span {
     display: none;
   }
+
+  @include respond-to('md') {
+    span {
+      display: inline;
+      margin-left: rem(8);
+      white-space: nowrap;
+    }
+  }
 }
 
 .TabsTrigger:hover {

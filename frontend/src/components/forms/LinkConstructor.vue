@@ -49,7 +49,7 @@ const onRemove = () => {
       <Button label="Remove" level="blank" type="button" @click="onRemove"></Button>
     </div>
     <Select
-      v-model="localLink.platform"
+      v-model="localLink.name"
       @update:model-value="updateLinkName"
       :name="`links[${props.index}].platform`"
     />

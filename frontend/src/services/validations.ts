@@ -32,7 +32,7 @@ export const userDetailsSchema = yup.object({
 });
 
 export const linkConstructorSchema = yup.object({
-  name: yup.string().required('Platform is required'),
+  platform: yup.string().required('Platform is required'),
   url: yup.string().url('Must be a valid URL').required('Link is required')
 });
 

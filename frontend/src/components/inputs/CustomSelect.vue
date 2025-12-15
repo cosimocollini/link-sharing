@@ -126,7 +126,7 @@ const { errorMessage, handleChange, meta } = useField(name.value || '', {
     color: $red;
   }
 
-  > svg {
+  > .icon {
     transition: 0.2s ease-in-out;
   }
 
@@ -134,7 +134,7 @@ const { errorMessage, handleChange, meta } = useField(name.value || '', {
     border-color: $color-main;
     box-shadow: 0px 0px 32px rgba(99, 60, 255, 0.25);
 
-    > svg {
+    > .icon {
       transform: rotate(180deg);
     }
   }

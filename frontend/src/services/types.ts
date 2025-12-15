@@ -27,7 +27,7 @@ export type InputUpdateSchool = {
 };
 export interface Link {
   id: string;
-  platform?: string;
+  name?: string;
   url?: string;
   displayOrder: number;
 }

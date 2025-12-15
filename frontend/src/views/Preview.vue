@@ -44,15 +44,15 @@ const userImage = computed(() => {
         v-if="userStore.getLinks.length > 0"
         v-for="(link, i) in userStore.getLinks"
         class="link body-s px-2"
-        :class="{ empty: !link.platform || !link.url }"
-        :style="{ backgroundColor: LINKS[link.platform as keyof typeof LINKS]?.color }"
+        :class="{ empty: !link.name || !link.url }"
+        :style="{ backgroundColor: LINKS[link.name as keyof typeof LINKS]?.color }"
         :key="i"
       >
-        <SvgIcon v-if="link.platform" :name="link.platform" color="#FFF" />
-        <span v-if="link.platform" class="ml-1">{{
-          LINKS[link.platform as keyof typeof LINKS]?.label
+        <SvgIcon v-if="link.name" :name="link.name" color="#FFF" />
+        <span v-if="link.name" class="ml-1">{{
+          LINKS[link.name as keyof typeof LINKS]?.label
         }}</span>
-        <SvgIcon v-if="link.platform" name="arrow-right" color="#FFF" />
+        <SvgIcon v-if="link.name" name="arrow-right" color="#FFF" />
       </div>
       <template v-for="(n, i) in 5" :key="i">
         <div v-if="!userStore.getLinks[i]" class="link empty"></div>
@@ -145,14 +145,11 @@ const userImage = computed(() => {
       margin: 20px auto 0;
       color: $white;
 
-      &:first-child {
-        margin-top: 56px;
-      }
-
-      svg {
-        fill: $white;
-        color: $white;
-
+      .icon {
+        svg {
+          fill: $white;
+          color: $white;
+        }
         &:last-child {
           margin-left: auto;
         }
